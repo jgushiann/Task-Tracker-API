@@ -1,13 +1,17 @@
 package com.nini.TaskTrackerAPI.repository;
 
+import com.nini.TaskTrackerAPI.model.Task;
 import com.nini.TaskTrackerAPI.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUser_id(long user_id);
+    List<Task> findAllByUser_id(long user_id);
     List<User> findByFirst_name(String first_name);
     List<User> findByLast_name(String last_name);
     Optional<User> findByEmail(String email);
@@ -15,6 +19,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByFirst_nameContaining(String first_name);
     List<User> findByLast_nameContaining(String last_name);
+    List<User> findByEmailContaining(String email);
+    List<User> findByUsernameContaining(String username);
 
     Boolean existsByUser_id(long user_id);
     Boolean existsByFirst_name(String first_name);
