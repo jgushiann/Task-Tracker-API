@@ -20,3 +20,17 @@ It’s built using Spring Boot, with JPA/Hibernate for database communication an
 6. Validation and Error Handling
    - implement global exception handling
   
+## Architecture
+Three-layer structure
+- Controller Layer: Handles REST requests
+- Service Layer: Contains business logic
+- Repository Layer: Handles database operations via JPA
+
+## Technologies used:
+- Java 17
+- Spring Boot 3.5.6
+- PostgreSQL
+- Spring data JPA
+- Maven
+- Postman
+  
