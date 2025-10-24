@@ -3,3 +3,16 @@
 The Task Tracker API is a backend service that allows users to manage daily tasks efficiently through RESTful endpoints. Users can create, update, delete, and organize their tasks by priority, category, and due date. The project follows a three-layer architecture (Controller -> Service -> Repository) and implements clean, modular, and testable code.
 
 It’s built using Spring Boot, with JPA/Hibernate for database communication and PostgreSQL as the data storage layer.
+
+## Core features
+1. User Management
+   - Register, Login, Manage profile
+   - Link each task to a user
+2. Task Management
+   - Create, read, update and delete tasks (CRUD operations)
+   - Add attributes like title, description, category, priority, status and due date
+4. Category and Priority
+   - 
+6. Search and Filtering
+7. Validation and Error Handling
+  
