@@ -11,8 +11,12 @@ It’s built using Spring Boot, with JPA/Hibernate for database communication an
 2. Task Management
    - Create, read, update and delete tasks (CRUD operations)
    - Add attributes like title, description, category, priority, status and due date
-4. Category and Priority
-   - 
-6. Search and Filtering
-7. Validation and Error Handling
+3. Category and Priority
+   - Assign tasks to categories (Work, University, Personal)
+   - Mark tasks as Low, Medium, High priority
+4. Search and Filtering
+   - Search tasks by keyword, due date and title
+   - Sort tasks by due date or priority
+6. Validation and Error Handling
+   - implement global exception handling
   
