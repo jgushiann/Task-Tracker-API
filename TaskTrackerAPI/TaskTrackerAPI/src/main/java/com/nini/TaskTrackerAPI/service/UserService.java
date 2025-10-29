@@ -50,7 +50,7 @@ public class UserService {
     }
 
     public List<Task> getTasksByUserId(Long user_id) throws Exception {
-        Optional<User> user = userRepository.findByUser_id(user_id);
+        Optional<User> user = userRepository.findByUserId(user_id);
         return taskRepository.findByAssignedUser(user.get());
     }
 
@@ -59,16 +59,16 @@ public class UserService {
     }
 
     private User getUserById(Long id) throws Exception {
-        return userRepository.findByUser_id(id)
+        return userRepository.findByUserId(id)
                 .orElseThrow(() -> new Exception("User not found with id" + id));
     }
 
     private List<User> getUserByFirstNameContaining(String firstName){
-        return userRepository.findByFirst_nameContaining(firstName);
+        return userRepository.findByFirstNameContaining(firstName);
     }
 
     private List<User> getUserByLastNameContaining(String lastName){
-        return userRepository.findByLast_nameContaining(lastName);
+        return userRepository.findByLastNameContaining(lastName);
     }
 
     private List<User> getUserByEmailContaining(String email){
@@ -80,24 +80,24 @@ public class UserService {
     }
 
     private void deleteUserById(Long id) throws Exception {
-        if(userRepository.existsByUser_id(id)){
-            userRepository.deleteByUser_id(id);
+        if(userRepository.existsByUserId(id)){
+            userRepository.deleteByUserId(id);
         }else{
             throw new Exception("User not found with id" + id);
         }
     }
 
     private void deleteUserByFirstName(String firstName) throws Exception {
-        if(userRepository.existsByFirst_name(firstName)){
-            userRepository.deleteByFirst_name(firstName);
+        if(userRepository.existsByFirstName(firstName)){
+            userRepository.deleteByFirstName(firstName);
         }else{
             throw new Exception("User not found with first name " + firstName);
         }
     }
 
     private void deleteUserByLastName(String lastName) throws Exception {
-        if(userRepository.existsByLast_name(lastName)){
-            userRepository.deleteByLast_name(lastName);
+        if(userRepository.existsByLastName(lastName)){
+            userRepository.deleteByLastName(lastName);
         }else{
             throw new Exception("User not found with last name " + lastName);
         }

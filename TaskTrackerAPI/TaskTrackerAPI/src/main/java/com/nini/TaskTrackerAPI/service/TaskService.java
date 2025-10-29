@@ -34,7 +34,7 @@ public class TaskService {
         }else if(dueDate != null){
             return getTasksByDueDate(dueDate);
         }else if(user_id != null){
-            return getTasksByAssignedUser(userRepository.findByUser_id(user_id).get());
+            return getTasksByAssignedUser(userRepository.findByUserId(user_id).get());
         }
         return getAll();
     }
@@ -59,12 +59,12 @@ public class TaskService {
         }else if(dueDate != null){
             deleteTaskByDueDate(dueDate);
         }else if(user_id != null){
-            deleteTaskByAssignedUser(userRepository.findByUser_id(user_id).get());
+            deleteTaskByAssignedUser(userRepository.findByUserId(user_id).get());
         }
     }
 
     private Task getTaskById(Long id) {
-        return taskRepository.findByTask_id(id).
+        return taskRepository.findByTaskId(id).
                 orElseThrow(() -> new RuntimeException("Task not found"));
     }
 
@@ -97,8 +97,8 @@ public class TaskService {
     }
 
     private void deleteTaskById(Long id) throws Exception {
-        if(taskRepository.existsByTask_id(id)){
-            taskRepository.deleteByTask_id(id);
+        if(taskRepository.existsByTaskId(id)){
+            taskRepository.deleteByTaskId(id);
         }else{
             throw new RuntimeException("Task does not exist");
         }

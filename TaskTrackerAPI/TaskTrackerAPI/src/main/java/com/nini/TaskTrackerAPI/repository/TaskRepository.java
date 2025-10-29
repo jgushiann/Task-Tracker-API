@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findAll();
 
-    Optional<Task> findByTask_id(long id);
+    Optional<Task> findByTaskId(long taskId);
     List<Task> findByPriority(Priority priority);
     List<Task> findByCategory(Category category);
     List<Task> findByStatus(Status status);
@@ -22,7 +22,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByTitleContaining(String title);
     List<Task> findByDescriptionContaining(String description);
 
-    Boolean existsByTask_id(long task_id);
+    Boolean existsByTaskId(long taskId);
     Boolean existsByTitleContaining(String title);
     Boolean existsByDescriptionContaining(String description);
     Boolean existsByPriority(Priority priority);
@@ -31,7 +31,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     Boolean existsByDueDate(LocalDate dueDate);
     Boolean existsByAssignedUser(User assignedUser);
 
-    void deleteByTask_id(long task_id);
+    void deleteByTaskId(long taskId);
     void deleteByTitleContaining(String title);
     void deleteByDescriptionContaining(String description);
     void deleteByPriority(Priority priority);

@@ -11,21 +11,21 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAll();
-    Optional<User> findByUser_id(long user_id);
-    List<User> findByFirst_nameContaining(String first_name);
-    List<User> findByLast_nameContaining(String last_name);
+    Optional<User> findByUserId(long userId);
+    List<User> findByFirstNameContaining(String firstName);
+    List<User> findByLastNameContaining(String lastName);
     List<User> findByEmailContaining(String email);
     List<User> findByUsernameContaining(String username);
 
-    Boolean existsByUser_id(long user_id);
-    Boolean existsByFirst_name(String first_name);
-    Boolean existsByLast_name(String last_name);
+    Boolean existsByUserId(long userId);
+    Boolean existsByFirstName(String firstName);
+    Boolean existsByLastName(String lastName);
     Boolean existsByEmail(String email);
     Boolean existsByUsername(String username);
 
-    void deleteByUser_id(long user_id);
-    void deleteByFirst_name(String first_name);
-    void deleteByLast_name(String last_name);
+    void deleteByUserId(long userId);
+    void deleteByFirstName(String firstName);
+    void deleteByLastName(String lastName);
     void deleteByEmail(String email);
     void deleteByUsername(String username);
 }

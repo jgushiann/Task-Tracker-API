@@ -10,7 +10,7 @@ public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long task_id;
+    private long taskId;
 
     private String title;
 
@@ -41,11 +41,11 @@ public class Task {
     }
 
     public long getId() {
-        return task_id;
+        return taskId;
     }
 
     public void setId(long id) {
-        this.task_id = id;
+        this.taskId = id;
     }
 
     public String getTitle() {
