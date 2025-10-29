@@ -2,6 +2,7 @@ package com.nini.TaskTrackerAPI.service;
 
 import com.nini.TaskTrackerAPI.model.*;
 import com.nini.TaskTrackerAPI.repository.TaskRepository;
+import com.nini.TaskTrackerAPI.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,50 +15,88 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
-    public Task getTaskById(Long id) {
+    @Autowired
+    private UserRepository userRepository;
+
+    public List<Task> searchTasks(String title, String description, Long id, Priority priority, Status status, Category category, LocalDate dueDate, Long user_id){
+        if(title != null){
+            return getTasksByTitleContaining(title);
+        }else if(description != null){
+            return getTasksByDescriptionContaining(description);
+        }else if(id != null){
+            return List.of(getTaskById(id));
+        }else if(priority != null){
+            return getTasksByPriority(priority);
+        }else if(status != null){
+            return getTasksByStatus(status);
+        }else if(category != null){
+            return getTasksByCategory(category);
+        }else if(dueDate != null){
+            return getTasksByDueDate(dueDate);
+        }else if(user_id != null){
+            return getTasksByAssignedUser(userRepository.findByUser_id(user_id).get());
+        }
+        return getAll();
+    }
+
+    public List<Task> getAll(){
+        return taskRepository.findAll();
+    }
+
+    public void deleteTasks(String title, String description, Long id, Priority priority, Status status, Category category, LocalDate dueDate, Long user_id) throws Exception {
+        if(title != null){
+            deleteTaskByTitleContaining(title);
+        }else if(description != null){
+            deleteTaskByDescriptionContaining(description);
+        }else if(id != null){
+            deleteTaskById(id);
+        }else if(priority != null){
+            deleteTaskByPriority(priority);
+        }else if(status != null){
+            deleteTaskByStatus(status);
+        }else if(category != null){
+            deleteTaskByCategory(category);
+        }else if(dueDate != null){
+            deleteTaskByDueDate(dueDate);
+        }else if(user_id != null){
+            deleteTaskByAssignedUser(userRepository.findByUser_id(user_id).get());
+        }
+    }
+
+    private Task getTaskById(Long id) {
         return taskRepository.findByTask_id(id).
                 orElseThrow(() -> new RuntimeException("Task not found"));
     }
 
-    public Task getTaskByTitle(String title) {
-        return taskRepository.findByTitle(title).
-                orElseThrow(() -> new RuntimeException("Task not found"));
-    }
-
-    public Task getTaskByDescription(String description) {
-        return taskRepository.findByDescription(description).
-                orElseThrow(() -> new RuntimeException("Task not found"));
-    }
-
-    public List<Task> getTasksByPriority(Priority priority) {
+    private List<Task> getTasksByPriority(Priority priority) {
         return taskRepository.findByPriority(priority);
     }
 
-    public List<Task> getTasksByCategory(Category category){
+    private List<Task> getTasksByCategory(Category category){
         return taskRepository.findByCategory(category);
     }
 
-    public List<Task> getTasksByStatus(Status status){
+    private List<Task> getTasksByStatus(Status status){
         return taskRepository.findByStatus(status);
     }
 
-    public List<Task> getTasksByDueDate(LocalDate dueDate){
+    private List<Task> getTasksByDueDate(LocalDate dueDate){
         return taskRepository.findByDueDate(dueDate);
     }
 
-    public List<Task> getTasksByAssignedUser(User assignedUser){
+    private List<Task> getTasksByAssignedUser(User assignedUser){
         return taskRepository.findByAssignedUser(assignedUser);
     }
 
-    public List<Task> getTasksByTitleContaining(String title){
+    private List<Task> getTasksByTitleContaining(String title){
         return taskRepository.findByTitleContaining(title);
     }
 
-    public List<Task> getTasksByDescriptionContaining(String description){
+    private List<Task> getTasksByDescriptionContaining(String description){
         return taskRepository.findByDescriptionContaining(description);
     }
 
-    public void deleteTaskById(Long id) throws Exception {
+    private void deleteTaskById(Long id) throws Exception {
         if(taskRepository.existsByTask_id(id)){
             taskRepository.deleteByTask_id(id);
         }else{
@@ -65,7 +104,7 @@ public class TaskService {
         }
     }
 
-    public void deleteTaskByTitleContaining(String title) throws Exception {
+    private void deleteTaskByTitleContaining(String title) throws Exception {
         if(taskRepository.existsByTitleContaining(title)){
             taskRepository.deleteByTitleContaining(title);
         }else{
@@ -73,7 +112,7 @@ public class TaskService {
         }
     }
 
-    public void deleteTaskByDescriptionContaining(String description) throws Exception {
+    private void deleteTaskByDescriptionContaining(String description) throws Exception {
         if(taskRepository.existsByDescriptionContaining(description)){
             taskRepository.deleteByDescriptionContaining(description);
         }else{
@@ -81,7 +120,7 @@ public class TaskService {
         }
     }
 
-    public void deleteTaskByPriority(Priority priority) throws Exception {
+    private void deleteTaskByPriority(Priority priority) throws Exception {
         if(taskRepository.existsByPriority(priority)){
             taskRepository.deleteByPriority(priority);
         }else{
@@ -89,7 +128,7 @@ public class TaskService {
         }
     }
 
-    public void deleteTaskByCategory(Category category) throws Exception {
+    private void deleteTaskByCategory(Category category) throws Exception {
         if(taskRepository.existsByCategory(category)){
             taskRepository.deleteByCategory(category);
         }else{
@@ -97,7 +136,7 @@ public class TaskService {
         }
     }
 
-    public void  deleteTaskByStatus(Status status) throws Exception {
+    private void deleteTaskByStatus(Status status) throws Exception {
         if(taskRepository.existsByStatus(status)){
             taskRepository.deleteByStatus(status);
         }else{
@@ -105,7 +144,7 @@ public class TaskService {
         }
     }
 
-    public void deleteTaskByDueDate(LocalDate dueDate) throws Exception {
+    private void deleteTaskByDueDate(LocalDate dueDate) throws Exception {
         if(taskRepository.existsByDueDate(dueDate)){
             taskRepository.deleteByDueDate(dueDate);
         }else{
@@ -113,7 +152,7 @@ public class TaskService {
         }
     }
 
-    public void deleteTaskByAssignedUser(User assignedUser) throws Exception {
+    private void deleteTaskByAssignedUser(User assignedUser) throws Exception {
         if(taskRepository.existsByAssignedUser(assignedUser)){
             taskRepository.deleteByAssignedUser(assignedUser);
         }else{
