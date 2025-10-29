@@ -5,23 +5,30 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "Tasks")
+@Table(name = "tasks")
 public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "task_id", nullable = false, unique = true)
     private long taskId;
 
+    @Column(name = "title")
     private String title;
 
+    @Column(name = "description")
     private String description;
 
+    @Column(name = "priority")
     private Priority priority;
 
+    @Column(name = "category")
     private Category category;
 
+    @Column(name = "status")
     private Status status;
 
+    @Column(name = "due_date")
     private LocalDate dueDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
