@@ -10,13 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+    List<User> findAll();
     Optional<User> findByUser_id(long user_id);
-    List<Task> findAllByUser_id(long user_id);
-    List<User> findByFirst_name(String first_name);
-    List<User> findByLast_name(String last_name);
-    Optional<User> findByEmail(String email);
-    Optional<User> findByUsername(String username);
-
     List<User> findByFirst_nameContaining(String first_name);
     List<User> findByLast_nameContaining(String last_name);
     List<User> findByEmailContaining(String email);
