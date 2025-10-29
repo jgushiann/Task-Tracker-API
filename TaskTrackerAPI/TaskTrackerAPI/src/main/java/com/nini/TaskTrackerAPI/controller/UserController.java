@@ -24,6 +24,11 @@ public class UserController {
         return userService.searchUser(firstname, lastname, username, email, id);
     }
 
+    @PostMapping("/add")
+    public void  addUser(@RequestBody User user) throws Exception {
+        userService.createUser(user);
+    }
+
     @GetMapping("/{user_id}/tasks")
     public List<Task> getTasksByUserId(@PathVariable Long user_id) throws Exception
     {
@@ -39,7 +44,4 @@ public class UserController {
     {
         userService.deleteUsers(firstname, lastname, username, email, user_id);
     }
-
-
-
 }

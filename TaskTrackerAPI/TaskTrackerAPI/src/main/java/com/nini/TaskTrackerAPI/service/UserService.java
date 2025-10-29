@@ -4,6 +4,7 @@ import com.nini.TaskTrackerAPI.model.Task;
 import com.nini.TaskTrackerAPI.model.User;
 import com.nini.TaskTrackerAPI.repository.TaskRepository;
 import com.nini.TaskTrackerAPI.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void deleteUsers(String firstname, String lastname, String username, String email, Long id) throws Exception {
         if(firstname != null){
             deleteUserByFirstName(firstname);
@@ -51,7 +53,16 @@ public class UserService {
 
     public List<Task> getTasksByUserId(Long user_id) throws Exception {
         Optional<User> user = userRepository.findByUserId(user_id);
-        return taskRepository.findByAssignedUser(user.get());
+        List<Task> byAssignedUser = taskRepository.findByAssignedUser(user.get());
+        return byAssignedUser;
+    }
+
+    public void createUser(User user) throws Exception {
+        if(!userRepository.existsByUsername(user.getUsername())){
+            userRepository.save(user);
+        }else{
+            throw new Exception("User already exists");
+        }
     }
 
     private List<User> getAll(){
