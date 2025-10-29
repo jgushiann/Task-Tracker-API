@@ -18,9 +18,9 @@ class UserTest {
     void setUp() {
         testUser = new User();
         testTask = new Task();
-        testUser.setId(1);
-        testUser.setFirst_name("Nini");
-        testUser.setLast_name("Smith");
+        testUser.setUserId(1);
+        testUser.setFirstName("Nini");
+        testUser.setLastName("Smith");
         testUser.setEmail("nini.smith@example.com");
         testUser.setUsername("ninismith");
         testUser.setPassword("ninismith123");
@@ -35,35 +35,35 @@ class UserTest {
 
     @Test
     void getId() {
-        assertEquals(1, testUser.getId());
+        assertEquals(1, testUser.getUserId());
     }
 
     @Test
     void setId() {
-        testUser.setId(2);
-        assertEquals(2, testUser.getId());
+        testUser.setUserId(2);
+        assertEquals(2, testUser.getUserId());
     }
 
     @Test
     void getFirst_name() {
-        assertEquals("Nini", testUser.getFirst_name());
+        assertEquals("Nini", testUser.getFirstName());
     }
 
     @Test
     void setFirst_name() {
-        testUser.setFirst_name("Nini_Smith");
-        assertEquals("Nini_Smith", testUser.getFirst_name());
+        testUser.setFirstName("Nini_Smith");
+        assertEquals("Nini_Smith", testUser.getFirstName());
     }
 
     @Test
     void getLast_name() {
-        assertEquals("Smith", testUser.getLast_name());
+        assertEquals("Smith", testUser.getLastName());
     }
 
     @Test
     void setLast_name() {
-        testUser.setLast_name("Nini_Smith");
-        assertEquals("Nini_Smith", testUser.getLast_name());
+        testUser.setLastName("Nini_Smith");
+        assertEquals("Nini_Smith", testUser.getLastName());
     }
 
     @Test
