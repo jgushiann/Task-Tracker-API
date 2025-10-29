@@ -53,8 +53,7 @@ public class UserService {
 
     public List<Task> getTasksByUserId(Long user_id) throws Exception {
         Optional<User> user = userRepository.findByUserId(user_id);
-        List<Task> byAssignedUser = taskRepository.findByAssignedUser(user.get());
-        return byAssignedUser;
+        return taskRepository.findByAssignedUser(user.get());
     }
 
     public void createUser(User user) throws Exception {
