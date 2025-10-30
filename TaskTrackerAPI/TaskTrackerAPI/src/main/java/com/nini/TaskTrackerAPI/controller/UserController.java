@@ -24,9 +24,19 @@ public class UserController {
         return userService.searchUser(firstname, lastname, username, email, id);
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public void  addUser(@RequestBody User user) throws Exception {
         userService.createUser(user);
+    }
+
+    @GetMapping("/{user_id}")
+    public User getUser(@PathVariable Long user_id) throws Exception {
+        return userService.searchUserByUserId(user_id);
+    }
+
+    @PutMapping("/{user_id}")
+    public void updateUser(@RequestBody User updatedUser,@PathVariable Long user_id) throws Exception {
+        userService.updateUser(user_id, updatedUser);
     }
 
     @GetMapping("/{user_id}/tasks")
@@ -35,13 +45,8 @@ public class UserController {
         return userService.getTasksByUserId(user_id);
     }
 
-    @DeleteMapping
-    public void deleteUsers(@RequestParam(required = false) String firstname,
-                            @RequestParam(required = false) String lastname,
-                            @RequestParam(required = false) String username,
-                            @RequestParam(required = false) String email,
-                            @RequestParam(required = false) Long user_id) throws Exception
-    {
-        userService.deleteUsers(firstname, lastname, username, email, user_id);
+    @DeleteMapping("/{user_id}")
+    public void deleteUsers(@PathVariable Long user_id) throws Exception {
+        userService.deleteUsers(user_id);
     }
 }

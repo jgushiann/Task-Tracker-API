@@ -36,18 +36,44 @@ public class UserService {
         }
     }
 
+    public User searchUserByUserId(Long user_id){
+        return userRepository.findById(user_id).orElse(null);
+    }
+
+    public void updateUser(Long user_id, User updatedUser){
+        User user = userRepository.findById(user_id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+
+        if(updatedUser.getFirstName() != null){
+            user.setFirstName(updatedUser.getFirstName());
+        }
+
+        if(updatedUser.getLastName() != null){
+            user.setLastName(updatedUser.getLastName());
+        }
+
+        if(updatedUser.getUsername() != null){
+            user.setUsername(updatedUser.getUsername());
+        }
+
+        if(updatedUser.getEmail() != null){
+            user.setEmail(updatedUser.getEmail());
+        }
+
+        if(updatedUser.getPassword() != null){
+            user.setPassword(updatedUser.getPassword());
+        }
+
+        userRepository.save(user);
+    }
+
     @Transactional
-    public void deleteUsers(String firstname, String lastname, String username, String email, Long id) throws Exception {
-        if(firstname != null){
-            deleteUserByFirstName(firstname);
-        }else if(lastname != null){
-            deleteUserByLastName(lastname);
-        }else if(username != null){
-            deleteUserByUsername(username);
-        }else if(email != null){
-            deleteUserByEmail(email);
-        }else if(id != null){
+    public void deleteUsers(Long id) throws Exception {
+        if(id != null){
             deleteUserById(id);
+        }else{
+            throw new Exception("User does not exist");
         }
     }
 
