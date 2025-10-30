@@ -32,5 +32,5 @@ Three-layer structure
 - PostgreSQL
 - Spring data JPA
 - Maven
-- Postman
+- Bruno for testing endpoints
   
