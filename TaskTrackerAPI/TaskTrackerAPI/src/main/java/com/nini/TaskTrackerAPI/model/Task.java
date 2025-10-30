@@ -1,11 +1,15 @@
 package com.nini.TaskTrackerAPI.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "tasks")
+@Getter
+@Setter
 public class Task {
 
     @Id
@@ -44,70 +48,6 @@ public class Task {
         this.category = category;
         this.status = status;
         this.dueDate = dueDate;
-        this.assignedUser = assignedUser;
-    }
-
-    public long getId() {
-        return taskId;
-    }
-
-    public void setId(long id) {
-        this.taskId = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Priority getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Priority priority) {
-        this.priority = priority;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(LocalDate dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public User getAssignedUser() {
-        return assignedUser;
-    }
-
-    public void setAssignedUser(User assignedUser) {
         this.assignedUser = assignedUser;
     }
 }
