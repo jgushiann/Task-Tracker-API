@@ -17,7 +17,7 @@ public class TaskTest {
     public void setUp() {
         testUser = new User();
         testTask = new Task();
-        testTask.setId(1);
+        testTask.setTaskId(1);
         testTask.setTitle("Test Title");
         testTask.setDescription("Test Description");
         testTask.setPriority(Priority.HIGH);
@@ -35,13 +35,13 @@ public class TaskTest {
 
     @Test
     void getId() {
-        assertEquals(1, testTask.getId());
+        assertEquals(1, testTask.getTaskId());
     }
 
     @Test
     void setId(){
-        testTask.setId(2);
-        assertEquals(2, testTask.getId());
+        testTask.setTaskId(2);
+        assertEquals(2, testTask.getTaskId());
     }
 
     @Test
