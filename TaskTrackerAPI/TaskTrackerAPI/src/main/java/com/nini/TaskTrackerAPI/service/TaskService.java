@@ -3,6 +3,7 @@ package com.nini.TaskTrackerAPI.service;
 import com.nini.TaskTrackerAPI.model.*;
 import com.nini.TaskTrackerAPI.repository.TaskRepository;
 import com.nini.TaskTrackerAPI.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ public class TaskService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
     public List<Task> searchTasks(String title, String description, Long id, Priority priority, Status status, Category category, LocalDate dueDate, Long user_id){
         if(title != null){
@@ -43,23 +46,63 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
-    public void deleteTasks(String title, String description, Long id, Priority priority, Status status, Category category, LocalDate dueDate, Long user_id) throws Exception {
-        if(title != null){
-            deleteTaskByTitleContaining(title);
-        }else if(description != null){
-            deleteTaskByDescriptionContaining(description);
-        }else if(id != null){
-            deleteTaskById(id);
-        }else if(priority != null){
-            deleteTaskByPriority(priority);
-        }else if(status != null){
-            deleteTaskByStatus(status);
-        }else if(category != null){
-            deleteTaskByCategory(category);
-        }else if(dueDate != null){
-            deleteTaskByDueDate(dueDate);
-        }else if(user_id != null){
-            deleteTaskByAssignedUser(userRepository.findByUserId(user_id).get());
+    public void createTask(Task task){
+        if(task.getAssignedUser() == null){
+            throw new IllegalArgumentException("Assigned User cannot be null");
+        }else{
+           User assignedUser = userService.searchUserByUserId(task.getAssignedUser().getUserId());
+           if(assignedUser != null){
+               task.setAssignedUser(assignedUser);
+               taskRepository.save(task);
+           }else throw new IllegalArgumentException("Assigned User not found");
+        }
+    }
+
+    public Task searchTaskById(Long task_id){
+        return taskRepository.findByTaskId(task_id)
+                .orElseThrow(() -> new RuntimeException("No task found"));
+    }
+
+    public void updateTask(Task updatedTask, Long task_id){
+        Task existingTask = taskRepository.findByTaskId(task_id)
+                .orElseThrow(() -> new RuntimeException("No task found"));
+
+        if(updatedTask.getTitle() != null){
+            existingTask.setTitle(updatedTask.getTitle());
+        }
+
+        if(updatedTask.getDescription() != null){
+            existingTask.setDescription(updatedTask.getDescription());
+        }
+
+        if(updatedTask.getPriority() != null){
+            existingTask.setPriority(updatedTask.getPriority());
+        }
+
+        if(updatedTask.getCategory() != null){
+            existingTask.setCategory(updatedTask.getCategory());
+        }
+
+        if(updatedTask.getDueDate() != null){
+            existingTask.setDueDate(updatedTask.getDueDate());
+        }
+
+        if(updatedTask.getAssignedUser() != null){
+            existingTask.setAssignedUser(updatedTask.getAssignedUser());
+        }
+
+        if(updatedTask.getStatus() != null){
+            existingTask.setStatus(updatedTask.getStatus());
+        }
+        taskRepository.save(existingTask);
+    }
+
+    @Transactional
+    public void deleteTask(Long task_id) throws Exception {
+        if(taskRepository.existsByTaskId(task_id)){
+            deleteTaskById(task_id);
+        }else{
+            throw new Exception("No task found");
         }
     }
 
@@ -84,7 +127,7 @@ public class TaskService {
         return taskRepository.findByDueDate(dueDate);
     }
 
-    private List<Task> getTasksByAssignedUser(User assignedUser){
+    public List<Task> getTasksByAssignedUser(User assignedUser){
         return taskRepository.findByAssignedUser(assignedUser);
     }
 
