@@ -1,5 +1,6 @@
 package com.nini.TaskTrackerAPI.service;
 
+import com.nini.TaskTrackerAPI.dto.UserRequestDTO;
 import com.nini.TaskTrackerAPI.model.Task;
 import com.nini.TaskTrackerAPI.model.User;
 import com.nini.TaskTrackerAPI.repository.TaskRepository;
@@ -8,6 +9,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,29 +43,29 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(Long user_id, User updatedUser){
+    public void updateUser(Long user_id, UserRequestDTO updatedUserDTO) throws Exception {
         User user = userRepository.findById(user_id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
 
-        if(updatedUser.getFirstName() != null){
-            user.setFirstName(updatedUser.getFirstName());
+        if(updatedUserDTO.getFirstName() != null){
+            user.setFirstName(updatedUserDTO.getFirstName());
         }
 
-        if(updatedUser.getLastName() != null){
-            user.setLastName(updatedUser.getLastName());
+        if(updatedUserDTO.getLastName() != null){
+            user.setLastName(updatedUserDTO.getLastName());
         }
 
-        if(updatedUser.getUsername() != null){
-            user.setUsername(updatedUser.getUsername());
+        if(updatedUserDTO.getUsername() != null){
+            user.setUsername(updatedUserDTO.getUsername());
         }
 
-        if(updatedUser.getEmail() != null){
-            user.setEmail(updatedUser.getEmail());
+        if(updatedUserDTO.getEmail() != null){
+            user.setEmail(updatedUserDTO.getEmail());
         }
 
-        if(updatedUser.getPassword() != null){
-            user.setPassword(updatedUser.getPassword());
+        if(updatedUserDTO.getPassword() != null){
+            user.setPassword(updatedUserDTO.getPassword());
         }
 
         userRepository.save(user);
@@ -84,8 +86,16 @@ public class UserService {
     }
 
     @Transactional
-    public void createUser(User user) throws Exception {
-        if(!userRepository.existsByUsername(user.getUsername())){
+    public void createUser(UserRequestDTO userDTO) throws Exception {
+        if(!userRepository.existsByUsername(userDTO.getUsername())){
+            User user = new User();
+            List<Task> tasks = new ArrayList<>();
+            user.setFirstName(userDTO.getFirstName());
+            user.setLastName(userDTO.getLastName());
+            user.setUsername(userDTO.getUsername());
+            user.setEmail(userDTO.getEmail());
+            user.setPassword(userDTO.getPassword());
+            user.setTasks(tasks);
             userRepository.save(user);
         }else{
             throw new Exception("User already exists");
