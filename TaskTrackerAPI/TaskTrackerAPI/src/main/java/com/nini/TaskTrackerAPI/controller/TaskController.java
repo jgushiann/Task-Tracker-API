@@ -54,6 +54,5 @@ public class TaskController {
     @DeleteMapping("/{task_id}")
     public void deleteTask(@PathVariable Long task_id) throws Exception{
         taskService.deleteTask(task_id);
-
     }
 }
