@@ -46,6 +46,7 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
+    @Transactional
     public void createTask(Task task){
         if(task.getAssignedUser() == null){
             throw new IllegalArgumentException("Assigned User cannot be null");
@@ -63,6 +64,7 @@ public class TaskService {
                 .orElseThrow(() -> new RuntimeException("No task found"));
     }
 
+    @Transactional
     public void updateTask(Task updatedTask, Long task_id){
         Task existingTask = taskRepository.findByTaskId(task_id)
                 .orElseThrow(() -> new RuntimeException("No task found"));
@@ -142,62 +144,6 @@ public class TaskService {
     private void deleteTaskById(Long id) throws Exception {
         if(taskRepository.existsByTaskId(id)){
             taskRepository.deleteByTaskId(id);
-        }else{
-            throw new RuntimeException("Task does not exist");
-        }
-    }
-
-    private void deleteTaskByTitleContaining(String title) throws Exception {
-        if(taskRepository.existsByTitleContaining(title)){
-            taskRepository.deleteByTitleContaining(title);
-        }else{
-            throw new RuntimeException("Task does not exist");
-        }
-    }
-
-    private void deleteTaskByDescriptionContaining(String description) throws Exception {
-        if(taskRepository.existsByDescriptionContaining(description)){
-            taskRepository.deleteByDescriptionContaining(description);
-        }else{
-            throw new RuntimeException("Task does not exist");
-        }
-    }
-
-    private void deleteTaskByPriority(Priority priority) throws Exception {
-        if(taskRepository.existsByPriority(priority)){
-            taskRepository.deleteByPriority(priority);
-        }else{
-            throw new RuntimeException("Task does not exist");
-        }
-    }
-
-    private void deleteTaskByCategory(Category category) throws Exception {
-        if(taskRepository.existsByCategory(category)){
-            taskRepository.deleteByCategory(category);
-        }else{
-            throw new RuntimeException("Task does not exist");
-        }
-    }
-
-    private void deleteTaskByStatus(Status status) throws Exception {
-        if(taskRepository.existsByStatus(status)){
-            taskRepository.deleteByStatus(status);
-        }else{
-            throw new RuntimeException("Task does not exist");
-        }
-    }
-
-    private void deleteTaskByDueDate(LocalDate dueDate) throws Exception {
-        if(taskRepository.existsByDueDate(dueDate)){
-            taskRepository.deleteByDueDate(dueDate);
-        }else{
-            throw new RuntimeException("Task does not exist");
-        }
-    }
-
-    private void deleteTaskByAssignedUser(User assignedUser) throws Exception {
-        if(taskRepository.existsByAssignedUser(assignedUser)){
-            taskRepository.deleteByAssignedUser(assignedUser);
         }else{
             throw new RuntimeException("Task does not exist");
         }

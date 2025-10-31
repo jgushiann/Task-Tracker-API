@@ -40,6 +40,7 @@ public class UserService {
         return userRepository.findById(user_id).orElse(null);
     }
 
+    @Transactional
     public void updateUser(Long user_id, User updatedUser){
         User user = userRepository.findById(user_id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -82,6 +83,7 @@ public class UserService {
         return taskRepository.findByAssignedUser(user.get());
     }
 
+    @Transactional
     public void createUser(User user) throws Exception {
         if(!userRepository.existsByUsername(user.getUsername())){
             userRepository.save(user);
@@ -120,38 +122,6 @@ public class UserService {
             userRepository.deleteByUserId(id);
         }else{
             throw new Exception("User not found with id" + id);
-        }
-    }
-
-    private void deleteUserByFirstName(String firstName) throws Exception {
-        if(userRepository.existsByFirstName(firstName)){
-            userRepository.deleteByFirstName(firstName);
-        }else{
-            throw new Exception("User not found with first name " + firstName);
-        }
-    }
-
-    private void deleteUserByLastName(String lastName) throws Exception {
-        if(userRepository.existsByLastName(lastName)){
-            userRepository.deleteByLastName(lastName);
-        }else{
-            throw new Exception("User not found with last name " + lastName);
-        }
-    }
-
-    private void deleteUserByEmail(String email) throws Exception {
-        if(userRepository.existsByEmail(email)){
-            userRepository.deleteByEmail(email);
-        }else{
-            throw new Exception("User not found with email " + email);
-        }
-    }
-
-    private void deleteUserByUsername(String username) throws Exception {
-        if(userRepository.existsByUsername(username)){
-            userRepository.deleteByUsername(username);
-        }else{
-            throw new Exception("User not found with username " + username);
         }
     }
 }
