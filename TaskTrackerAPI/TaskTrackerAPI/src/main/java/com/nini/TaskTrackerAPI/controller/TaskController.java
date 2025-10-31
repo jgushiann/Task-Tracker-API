@@ -1,5 +1,7 @@
 package com.nini.TaskTrackerAPI.controller;
 
+import com.nini.TaskTrackerAPI.dto.TaskRequestDTO;
+import com.nini.TaskTrackerAPI.dto.TaskResponseDTO;
 import com.nini.TaskTrackerAPI.model.*;
 import com.nini.TaskTrackerAPI.service.TaskService;
 import com.nini.TaskTrackerAPI.service.UserService;
@@ -19,7 +21,7 @@ public class TaskController {
     private UserService userService;
 
     @GetMapping
-    public List<Task> searchTasks(@RequestParam(required = false) String title,
+    public List<TaskResponseDTO> searchTasks(@RequestParam(required = false) String title,
                                   @RequestParam(required = false) String description,
                                   @RequestParam(required = false) Long id,
                                   @RequestParam(required = false) Priority priority,
@@ -27,28 +29,59 @@ public class TaskController {
                                   @RequestParam(required = false) Category category,
                                   @RequestParam(required = false) LocalDate dueDate,
                                   @RequestParam(required = false) Long user_id) throws Exception{
-        return taskService.searchTasks(title, description, id, priority, status, category,dueDate,user_id);
+        List<Task> tasks = taskService.searchTasks(title, description, id, priority, status, category,dueDate,user_id);
+
+        return tasks.stream()
+                .map(task -> new TaskResponseDTO(
+                        task.getTitle(),
+                        task.getDescription(),
+                        task.getAssignedUser().getUserId(),
+                        task.getPriority(),
+                        task.getCategory(),
+                        task.getStatus(),
+                        task.getDueDate()
+                ))
+                .toList();
     }
 
     @GetMapping("/{task_id}")
-    public Task getTask(@PathVariable("task_id") Long task_id) throws Exception{
-        return taskService.searchTaskById(task_id);
+    public TaskResponseDTO getTask(@PathVariable("task_id") Long task_id) throws Exception{
+        Task task = taskService.searchTaskById(task_id);
+        return new TaskResponseDTO(
+                task.getTitle(),
+                task.getDescription(),
+                task.getAssignedUser().getUserId(),
+                task.getPriority(),
+                task.getCategory(),
+                task.getStatus(),
+                task.getDueDate()
+        );
     }
 
     @PostMapping
-    public void createTask(@RequestBody Task task) throws Exception{
-        taskService.createTask(task);
+    public void createTask(@RequestBody TaskRequestDTO taskDTO) throws Exception{
+        taskService.createTask(taskDTO);
     }
 
     @PutMapping("/{task_id}")
-    public void updateTask(@RequestBody Task updatedTask, @PathVariable Long task_id) throws Exception{
-        taskService.updateTask(updatedTask, task_id);
+    public void updateTask(@RequestBody TaskRequestDTO updatedTaskDTO, @PathVariable Long task_id) throws Exception{
+        taskService.updateTask(updatedTaskDTO, task_id);
     }
 
     @GetMapping("/user/{user_id}")
-    public List<Task> getTasksForUser(@PathVariable Long user_id) throws Exception{
+    public List<TaskResponseDTO> getTasksForUser(@PathVariable Long user_id) throws Exception{
         User user = userService.searchUserByUserId(user_id);
-        return taskService.getTasksByAssignedUser(user);
+        List<Task> tasks = taskService.getTasksByAssignedUser(user);
+        return tasks.stream()
+                .map(task -> new TaskResponseDTO(
+                        task.getTitle(),
+                        task.getDescription(),
+                        task.getAssignedUser().getUserId(),
+                        task.getPriority(),
+                        task.getCategory(),
+                        task.getStatus(),
+                        task.getDueDate()
+                )).toList();
     }
 
     @DeleteMapping("/{task_id}")
