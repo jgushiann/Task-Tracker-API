@@ -23,19 +23,13 @@ public class UserService {
     private TaskRepository taskRepository;
 
     public List<User> searchUser(String firstname, String lastname,String username, String email, Long id) throws Exception {
-        if(firstname != null){
-            return getUserByFirstNameContaining(firstname);
-        }else if(lastname != null){
-            return getUserByLastNameContaining(lastname);
-        }else if(username != null){
-            return getUserByUsernameContaining(username);
-        }else if(email != null){
-            return getUserByEmailContaining(email);
-        }else if(id != null){
-            return List.of(getUserById(id));
-        }else{
-            return getAll();
-        }
+        if (firstname != null) return getUserByFirstNameContaining(firstname);
+        if (lastname != null) return getUserByLastNameContaining(lastname);
+        if (username != null) return getUserByUsernameContaining(username);
+        if (email != null) return getUserByEmailContaining(email);
+        if (id != null) return List.of(getUserById(id));
+
+        return getAll();
     }
 
     public User searchUserByUserId(Long user_id){
@@ -47,26 +41,11 @@ public class UserService {
         User user = userRepository.findById(user_id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-
-        if(updatedUserDTO.getFirstName() != null){
-            user.setFirstName(updatedUserDTO.getFirstName());
-        }
-
-        if(updatedUserDTO.getLastName() != null){
-            user.setLastName(updatedUserDTO.getLastName());
-        }
-
-        if(updatedUserDTO.getUsername() != null){
-            user.setUsername(updatedUserDTO.getUsername());
-        }
-
-        if(updatedUserDTO.getEmail() != null){
-            user.setEmail(updatedUserDTO.getEmail());
-        }
-
-        if(updatedUserDTO.getPassword() != null){
-            user.setPassword(updatedUserDTO.getPassword());
-        }
+        user.setFirstName(updatedUserDTO.getFirstName());
+        user.setLastName(updatedUserDTO.getLastName());
+        user.setUsername(updatedUserDTO.getUsername());
+        user.setEmail(updatedUserDTO.getEmail());
+        user.setPassword(updatedUserDTO.getPassword());
 
         userRepository.save(user);
     }

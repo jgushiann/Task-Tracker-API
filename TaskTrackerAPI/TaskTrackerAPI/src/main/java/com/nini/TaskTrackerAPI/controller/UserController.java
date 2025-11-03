@@ -6,6 +6,7 @@ import com.nini.TaskTrackerAPI.dto.UserResponseDTO;
 import com.nini.TaskTrackerAPI.model.Task;
 import com.nini.TaskTrackerAPI.model.User;
 import com.nini.TaskTrackerAPI.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +36,7 @@ public class UserController {
     }
 
     @PostMapping
-    public void addUser(@RequestBody UserRequestDTO userDTO) throws Exception {
+    public void addUser(@RequestBody @Valid UserRequestDTO userDTO) throws Exception {
         userService.createUser(userDTO);
     }
 
@@ -51,7 +52,7 @@ public class UserController {
     }
 
     @PutMapping("/{user_id}")
-    public void updateUser(@RequestBody UserRequestDTO updatedUserDTO,@PathVariable Long user_id) throws Exception {
+    public void updateUser(@RequestBody @Valid UserRequestDTO updatedUserDTO,@PathVariable Long user_id) throws Exception {
         userService.updateUser(user_id, updatedUserDTO);
     }
 

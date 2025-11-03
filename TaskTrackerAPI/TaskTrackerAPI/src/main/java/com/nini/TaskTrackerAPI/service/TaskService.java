@@ -23,23 +23,14 @@ public class TaskService {
     private UserService userService;
 
     public List<Task> searchTasks(String title, String description, Long id, Priority priority, Status status, Category category, LocalDate dueDate, Long user_id){
-        if(title != null){
-            return getTasksByTitleContaining(title);
-        }else if(description != null){
-            return getTasksByDescriptionContaining(description);
-        }else if(id != null){
-            return List.of(getTaskById(id));
-        }else if(priority != null){
-            return getTasksByPriority(priority);
-        }else if(status != null){
-            return getTasksByStatus(status);
-        }else if(category != null){
-            return getTasksByCategory(category);
-        }else if(dueDate != null){
-            return getTasksByDueDate(dueDate);
-        }else if(user_id != null){
-            return getTasksByAssignedUser(userRepository.findByUserId(user_id).get());
-        }
+        if (title != null) return getTasksByTitleContaining(title);
+        if (description != null) return getTasksByDescriptionContaining(description);
+        if (id != null) return List.of(getTaskById(id));
+        if (priority != null) return getTasksByPriority(priority);
+        if (status != null) return getTasksByStatus(status);
+        if (category != null) return getTasksByCategory(category);
+        if (dueDate != null) return getTasksByDueDate(dueDate);
+        if (user_id != null) return getTasksByAssignedUser(userRepository.findByUserId(user_id).orElse(null));
         return getAll();
     }
 
@@ -49,20 +40,16 @@ public class TaskService {
 
     @Transactional
     public void createTask(TaskRequestDTO taskDTO) throws Exception{
-        if(taskDTO.getTaskAssignedUserId() == null){
-            throw new IllegalArgumentException("Assigned User cannot be null");
-        }else{
-            Task task = new Task();
-            task.setTitle(taskDTO.getTaskTitle());
-            task.setDescription(taskDTO.getTaskDescription());
-            task.setStatus(taskDTO.getTaskStatus());
-            task.setPriority(taskDTO.getTaskPriority());
-            task.setDueDate(taskDTO.getTaskDueDate());
-            task.setCategory(taskDTO.getTaskCategory());
-            task.setAssignedUser(userService.searchUserByUserId(taskDTO.getTaskAssignedUserId()));
+        Task task = new Task();
+        task.setTitle(taskDTO.getTaskTitle());
+        task.setDescription(taskDTO.getTaskDescription());
+        task.setStatus(taskDTO.getTaskStatus());
+        task.setPriority(taskDTO.getTaskPriority());
+        task.setDueDate(taskDTO.getTaskDueDate());
+        task.setCategory(taskDTO.getTaskCategory());
+        task.setAssignedUser(userService.searchUserByUserId(taskDTO.getTaskAssignedUserId()));
 
-            taskRepository.save(task);
-        }
+        taskRepository.save(task);
     }
 
     public Task searchTaskById(Long task_id){
@@ -75,33 +62,14 @@ public class TaskService {
         Task existingTask = taskRepository.findByTaskId(task_id)
                 .orElseThrow(() -> new RuntimeException("No task found"));
 
-        if(updatedTaskDTO.getTaskTitle() != null){
-            existingTask.setTitle(updatedTaskDTO.getTaskTitle());
-        }
+        existingTask.setTitle(updatedTaskDTO.getTaskTitle());
+        existingTask.setDescription(updatedTaskDTO.getTaskDescription());
+        existingTask.setPriority(updatedTaskDTO.getTaskPriority());
+        existingTask.setCategory(updatedTaskDTO.getTaskCategory());
+        existingTask.setDueDate(updatedTaskDTO.getTaskDueDate());
+        existingTask.setAssignedUser(userService.searchUserByUserId(updatedTaskDTO.getTaskAssignedUserId()));
+        existingTask.setStatus(updatedTaskDTO.getTaskStatus());
 
-        if(updatedTaskDTO.getTaskDescription() != null){
-            existingTask.setDescription(updatedTaskDTO.getTaskDescription());
-        }
-
-        if(updatedTaskDTO.getTaskPriority() != null){
-            existingTask.setPriority(updatedTaskDTO.getTaskPriority());
-        }
-
-        if(updatedTaskDTO.getTaskCategory() != null){
-            existingTask.setCategory(updatedTaskDTO.getTaskCategory());
-        }
-
-        if(updatedTaskDTO.getTaskDueDate() != null){
-            existingTask.setDueDate(updatedTaskDTO.getTaskDueDate());
-        }
-
-        if(updatedTaskDTO.getTaskAssignedUserId() != null){
-            existingTask.setAssignedUser(userService.searchUserByUserId(updatedTaskDTO.getTaskAssignedUserId()));
-        }
-
-        if(updatedTaskDTO.getTaskStatus() != null){
-            existingTask.setStatus(updatedTaskDTO.getTaskStatus());
-        }
         taskRepository.save(existingTask);
     }
 

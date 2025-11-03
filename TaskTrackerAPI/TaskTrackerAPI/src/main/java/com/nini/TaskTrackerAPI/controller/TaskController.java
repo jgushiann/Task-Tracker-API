@@ -5,6 +5,7 @@ import com.nini.TaskTrackerAPI.dto.TaskResponseDTO;
 import com.nini.TaskTrackerAPI.model.*;
 import com.nini.TaskTrackerAPI.service.TaskService;
 import com.nini.TaskTrackerAPI.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,12 +60,12 @@ public class TaskController {
     }
 
     @PostMapping
-    public void createTask(@RequestBody TaskRequestDTO taskDTO) throws Exception{
+    public void createTask(@RequestBody @Valid TaskRequestDTO taskDTO) throws Exception{
         taskService.createTask(taskDTO);
     }
 
     @PutMapping("/{task_id}")
-    public void updateTask(@RequestBody TaskRequestDTO updatedTaskDTO, @PathVariable Long task_id) throws Exception{
+    public void updateTask(@RequestBody @Valid TaskRequestDTO updatedTaskDTO, @PathVariable Long task_id) throws Exception{
         taskService.updateTask(updatedTaskDTO, task_id);
     }
 

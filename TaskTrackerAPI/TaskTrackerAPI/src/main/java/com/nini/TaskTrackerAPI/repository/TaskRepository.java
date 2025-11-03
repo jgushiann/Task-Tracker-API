@@ -23,20 +23,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByDescriptionContaining(String description);
 
     Boolean existsByTaskId(long taskId);
-    Boolean existsByTitleContaining(String title);
-    Boolean existsByDescriptionContaining(String description);
-    Boolean existsByPriority(Priority priority);
-    Boolean existsByCategory(Category category);
-    Boolean existsByStatus(Status status);
-    Boolean existsByDueDate(LocalDate dueDate);
-    Boolean existsByAssignedUser(User assignedUser);
 
     void deleteByTaskId(long taskId);
-    void deleteByTitleContaining(String title);
-    void deleteByDescriptionContaining(String description);
-    void deleteByPriority(Priority priority);
-    void deleteByCategory(Category category);
-    void deleteByStatus(Status status);
-    void deleteByDueDate(LocalDate dueDate);
-    void deleteByAssignedUser(User assignedUser);
 }
