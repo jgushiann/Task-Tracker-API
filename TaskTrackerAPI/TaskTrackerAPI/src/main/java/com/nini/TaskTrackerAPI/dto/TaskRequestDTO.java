@@ -9,9 +9,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskRequestDTO {
