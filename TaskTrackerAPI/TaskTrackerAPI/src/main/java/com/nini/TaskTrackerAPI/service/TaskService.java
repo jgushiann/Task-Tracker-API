@@ -1,6 +1,7 @@
 package com.nini.TaskTrackerAPI.service;
 
 import com.nini.TaskTrackerAPI.dto.TaskRequestDTO;
+import com.nini.TaskTrackerAPI.mapper.TaskMapper;
 import com.nini.TaskTrackerAPI.model.*;
 import com.nini.TaskTrackerAPI.repository.TaskRepository;
 import com.nini.TaskTrackerAPI.repository.UserRepository;
@@ -16,7 +17,6 @@ public class TaskService {
 
     @Autowired
     private TaskRepository taskRepository;
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -41,13 +41,13 @@ public class TaskService {
     @Transactional
     public void createTask(TaskRequestDTO taskDTO) throws Exception{
         Task task = new Task();
-        task.setTitle(taskDTO.getTaskTitle());
-        task.setDescription(taskDTO.getTaskDescription());
-        task.setStatus(taskDTO.getTaskStatus());
-        task.setPriority(taskDTO.getTaskPriority());
-        task.setDueDate(taskDTO.getTaskDueDate());
-        task.setCategory(taskDTO.getTaskCategory());
-        task.setAssignedUser(userService.searchUserByUserId(taskDTO.getTaskAssignedUserId()));
+        task.setTitle(taskDTO.getTitle());
+        task.setDescription(taskDTO.getDescription());
+        task.setStatus(taskDTO.getStatus());
+        task.setPriority(taskDTO.getPriority());
+        task.setDueDate(taskDTO.getDueDate());
+        task.setCategory(taskDTO.getCategory());
+        task.setAssignedUser(taskDTO.getAssignedUser());
 
         taskRepository.save(task);
     }
@@ -62,13 +62,13 @@ public class TaskService {
         Task existingTask = taskRepository.findByTaskId(task_id)
                 .orElseThrow(() -> new RuntimeException("No task found"));
 
-        existingTask.setTitle(updatedTaskDTO.getTaskTitle());
-        existingTask.setDescription(updatedTaskDTO.getTaskDescription());
-        existingTask.setPriority(updatedTaskDTO.getTaskPriority());
-        existingTask.setCategory(updatedTaskDTO.getTaskCategory());
-        existingTask.setDueDate(updatedTaskDTO.getTaskDueDate());
-        existingTask.setAssignedUser(userService.searchUserByUserId(updatedTaskDTO.getTaskAssignedUserId()));
-        existingTask.setStatus(updatedTaskDTO.getTaskStatus());
+        existingTask.setTitle(updatedTaskDTO.getTitle());
+        existingTask.setDescription(updatedTaskDTO.getDescription());
+        existingTask.setPriority(updatedTaskDTO.getPriority());
+        existingTask.setCategory(updatedTaskDTO.getCategory());
+        existingTask.setDueDate(updatedTaskDTO.getDueDate());
+        existingTask.setAssignedUser(updatedTaskDTO.getAssignedUser());
+        existingTask.setStatus(updatedTaskDTO.getStatus());
 
         taskRepository.save(existingTask);
     }
