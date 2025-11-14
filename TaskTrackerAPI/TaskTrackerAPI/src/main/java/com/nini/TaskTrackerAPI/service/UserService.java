@@ -7,6 +7,11 @@ import com.nini.TaskTrackerAPI.repository.TaskRepository;
 import com.nini.TaskTrackerAPI.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,13 +19,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private TaskRepository taskRepository;
+
+    @Autowired
+    private PasswordEncoder  passwordEncoder;
 
     public List<User> searchUser(String firstname, String lastname,String username, String email, Long id) throws Exception {
         if (firstname != null) return getUserByFirstNameContaining(firstname);
@@ -73,7 +81,7 @@ public class UserService {
             user.setLastName(userDTO.getLastName());
             user.setUsername(userDTO.getUsername());
             user.setEmail(userDTO.getEmail());
-            user.setPassword(userDTO.getPassword());
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
             user.setTasks(tasks);
             userRepository.save(user);
         }else{
@@ -112,5 +120,10 @@ public class UserService {
         }else{
             throw new Exception("User not found with id" + id);
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
     }
 }

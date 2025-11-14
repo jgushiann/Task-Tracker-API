@@ -10,6 +10,8 @@ import com.nini.TaskTrackerAPI.model.User;
 import com.nini.TaskTrackerAPI.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +27,27 @@ public class UserController {
 
     @Autowired
     private TaskMapper taskMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @PostMapping("/register")
+    public void register(@RequestBody UserRequestDTO userRequestDTO) throws Exception {
+        userService.createUser(userRequestDTO);
+    }
+
+    @PostMapping("/login")
+    public void login(@RequestBody UserRequestDTO userRequestDTO) throws Exception {
+        String username = userRequestDTO.getUsername();
+        String password = passwordEncoder.encode(userRequestDTO.getPassword());
+
+        if(userService.loadUserByUsername(username).getPassword().equals(password)){
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+        }else{
+            throw new Exception("Incorrect username or password");
+        }
+    }
+
 
     @GetMapping
     public List<UserResponseDTO> getUsers(@RequestParam(required = false) String firstname,

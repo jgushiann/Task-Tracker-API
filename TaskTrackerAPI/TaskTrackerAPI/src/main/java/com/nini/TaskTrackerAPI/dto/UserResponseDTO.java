@@ -1,9 +1,11 @@
 package com.nini.TaskTrackerAPI.dto;
 
-public record UserResponseDTO(
-        String firstName,
-        String lastName,
-        String email,
-        String username
-) {
+import lombok.Data;
+
+@Data
+public class UserResponseDTO{
+    String firstName;
+    String lastName;
+    String email;
+    String username;
 }
