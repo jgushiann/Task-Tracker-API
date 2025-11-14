@@ -47,7 +47,7 @@ public class TaskService {
         task.setPriority(taskDTO.getPriority());
         task.setDueDate(taskDTO.getDueDate());
         task.setCategory(taskDTO.getCategory());
-        task.setAssignedUser(taskDTO.getAssignedUser());
+        task.setAssignedUser(userRepository.findByUserId(taskDTO.getAssignedUser()).orElse(null));
 
         taskRepository.save(task);
     }
@@ -67,7 +67,7 @@ public class TaskService {
         existingTask.setPriority(updatedTaskDTO.getPriority());
         existingTask.setCategory(updatedTaskDTO.getCategory());
         existingTask.setDueDate(updatedTaskDTO.getDueDate());
-        existingTask.setAssignedUser(updatedTaskDTO.getAssignedUser());
+        existingTask.setAssignedUser(userRepository.findByUserId(updatedTaskDTO.getAssignedUser()).orElse(null));
         existingTask.setStatus(updatedTaskDTO.getStatus());
 
         taskRepository.save(existingTask);

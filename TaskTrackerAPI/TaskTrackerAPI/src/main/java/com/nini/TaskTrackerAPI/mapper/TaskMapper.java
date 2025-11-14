@@ -2,10 +2,13 @@ package com.nini.TaskTrackerAPI.mapper;
 
 import com.nini.TaskTrackerAPI.dto.TaskResponseDTO;
 import com.nini.TaskTrackerAPI.model.Task;
-import org.apache.ibatis.annotations.Mapper;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Mapper
+
+@Mapper(componentModel = "spring")
 public interface TaskMapper {
+    @Mapping(source = "assignedUser.userId", target = "assignedUser")
     TaskResponseDTO toDto(Task entity);
-    Task toEntity(TaskResponseDTO dto);
+    //Task toEntity(TaskResponseDTO dto);
 }

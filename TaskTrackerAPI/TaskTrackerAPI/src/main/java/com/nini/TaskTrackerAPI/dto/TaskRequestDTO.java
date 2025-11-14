@@ -34,5 +34,5 @@ public class TaskRequestDTO {
     private LocalDate dueDate;
 
     @NotNull(message = "Task must be assigned to the User")
-    private User assignedUser;
+    private Long assignedUser;
 }
