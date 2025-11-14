@@ -2,6 +2,8 @@ package com.nini.TaskTrackerAPI.controller;
 
 import com.nini.TaskTrackerAPI.dto.TaskRequestDTO;
 import com.nini.TaskTrackerAPI.dto.TaskResponseDTO;
+import com.nini.TaskTrackerAPI.mapper.TaskMapper;
+import com.nini.TaskTrackerAPI.mapper.UserMapper;
 import com.nini.TaskTrackerAPI.model.*;
 import com.nini.TaskTrackerAPI.service.TaskService;
 import com.nini.TaskTrackerAPI.service.UserService;
@@ -21,6 +23,12 @@ public class TaskController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private TaskMapper taskMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
     @GetMapping
     public List<TaskResponseDTO> searchTasks(@RequestParam(required = false) String title,
                                   @RequestParam(required = false) String description,
@@ -33,30 +41,14 @@ public class TaskController {
         List<Task> tasks = taskService.searchTasks(title, description, id, priority, status, category,dueDate,user_id);
 
         return tasks.stream()
-                .map(task -> new TaskResponseDTO(
-                        task.getTitle(),
-                        task.getDescription(),
-                        task.getAssignedUser().getUserId(),
-                        task.getPriority(),
-                        task.getCategory(),
-                        task.getStatus(),
-                        task.getDueDate()
-                ))
+                .map(task -> taskMapper.toDto(task))
                 .toList();
     }
 
     @GetMapping("/{task_id}")
     public TaskResponseDTO getTask(@PathVariable("task_id") Long task_id) throws Exception{
         Task task = taskService.searchTaskById(task_id);
-        return new TaskResponseDTO(
-                task.getTitle(),
-                task.getDescription(),
-                task.getAssignedUser().getUserId(),
-                task.getPriority(),
-                task.getCategory(),
-                task.getStatus(),
-                task.getDueDate()
-        );
+        return taskMapper.toDto(task);
     }
 
     @PostMapping
@@ -74,15 +66,8 @@ public class TaskController {
         User user = userService.searchUserByUserId(user_id);
         List<Task> tasks = taskService.getTasksByAssignedUser(user);
         return tasks.stream()
-                .map(task -> new TaskResponseDTO(
-                        task.getTitle(),
-                        task.getDescription(),
-                        task.getAssignedUser().getUserId(),
-                        task.getPriority(),
-                        task.getCategory(),
-                        task.getStatus(),
-                        task.getDueDate()
-                )).toList();
+                .map(task -> taskMapper.toDto(task))
+                .toList();
     }
 
     @DeleteMapping("/{task_id}")

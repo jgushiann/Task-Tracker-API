@@ -3,6 +3,8 @@ package com.nini.TaskTrackerAPI.controller;
 import com.nini.TaskTrackerAPI.dto.TaskResponseDTO;
 import com.nini.TaskTrackerAPI.dto.UserRequestDTO;
 import com.nini.TaskTrackerAPI.dto.UserResponseDTO;
+import com.nini.TaskTrackerAPI.mapper.TaskMapper;
+import com.nini.TaskTrackerAPI.mapper.UserMapper;
 import com.nini.TaskTrackerAPI.model.Task;
 import com.nini.TaskTrackerAPI.model.User;
 import com.nini.TaskTrackerAPI.service.UserService;
@@ -18,6 +20,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private TaskMapper taskMapper;
+
     @GetMapping
     public List<UserResponseDTO> getUsers(@RequestParam(required = false) String firstname,
                                           @RequestParam(required = false) String lastname,
@@ -27,12 +35,8 @@ public class UserController {
     {
         List<User> users = userService.searchUser(firstname, lastname, username, email, id);
         return users.stream()
-                .map(user -> new UserResponseDTO(
-                        user.getFirstName(),
-                        user.getLastName(),
-                        user.getEmail(),
-                        user.getUsername()
-                )).toList();
+                .map(user -> userMapper.toDto(user))
+                .toList();
     }
 
     @PostMapping
@@ -43,12 +47,7 @@ public class UserController {
     @GetMapping("/{user_id}")
     public UserResponseDTO getUser(@PathVariable Long user_id) throws Exception {
         User user = userService.searchUserByUserId(user_id);
-        return new UserResponseDTO(
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail(),
-                user.getUsername()
-        );
+        return userMapper.toDto(user);
     }
 
     @PutMapping("/{user_id}")
@@ -61,15 +60,8 @@ public class UserController {
     {
         List<Task> tasks = userService.getTasksByUserId(user_id);
         return tasks.stream()
-                .map(task -> new TaskResponseDTO(
-                        task.getTitle(),
-                        task.getDescription(),
-                        task.getAssignedUser().getUserId(),
-                        task.getPriority(),
-                        task.getCategory(),
-                        task.getStatus(),
-                        task.getDueDate()
-                )).toList();
+                .map(task -> taskMapper.toDto(task)
+                ).toList();
     }
 
     @DeleteMapping("/{user_id}")
