@@ -8,7 +8,11 @@ import com.nini.TaskTrackerAPI.model.*;
 import com.nini.TaskTrackerAPI.service.TaskService;
 import com.nini.TaskTrackerAPI.service.UserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -16,62 +20,57 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
+@RequiredArgsConstructor
 public class TaskController {
 
-    @Autowired
-    private TaskService taskService;
-    @Autowired
-    private UserService userService;
+    private final TaskService taskService;
 
-    @Autowired
-    private TaskMapper taskMapper;
+    private final UserService userService;
 
-    @Autowired
-    private UserMapper userMapper;
+    private final TaskMapper taskMapper;
+
+    private final UserMapper userMapper;
 
     @GetMapping
-    public List<TaskResponseDTO> searchTasks(@RequestParam(required = false) String title,
-                                  @RequestParam(required = false) String description,
-                                  @RequestParam(required = false) Long id,
-                                  @RequestParam(required = false) Priority priority,
-                                  @RequestParam(required = false) Status status,
-                                  @RequestParam(required = false) Category category,
-                                  @RequestParam(required = false) LocalDate dueDate,
-                                  @RequestParam(required = false) Long user_id) throws Exception{
-        List<Task> tasks = taskService.searchTasks(title, description, id, priority, status, category,dueDate,user_id);
-
-        return tasks.stream()
-                .map(task -> taskMapper.toDto(task))
-                .toList();
+    public ResponseEntity<List<TaskResponseDTO>> searchTasks(@RequestParam(required = false) String title,
+                                                            @RequestParam(required = false) String description,
+                                                            @RequestParam(required = false) Long id,
+                                                            @RequestParam(required = false) Priority priority,
+                                                            @RequestParam(required = false) Status status,
+                                                            @RequestParam(required = false) Category category,
+                                                            @RequestParam(required = false) LocalDate dueDate,
+                                                            @RequestParam(required = false) Long assignedUserId){
+        List<TaskResponseDTO> taskDTOs = taskService.searchTasks(title, description, id, priority, status, category, dueDate, assignedUserId);
+        return ResponseEntity.status(HttpStatus.OK).body(taskDTOs);
     }
 
-    @GetMapping("/{task_id}")
-    public TaskResponseDTO getTask(@PathVariable("task_id") Long task_id) throws Exception{
-        Task task = taskService.searchTaskById(task_id);
-        return taskMapper.toDto(task);
+    @GetMapping("/{id}")
+    public ResponseEntity<TaskResponseDTO> getTask(@PathVariable("id") Long id){
+        TaskResponseDTO taskDTO = taskService.searchTaskById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(taskDTO);
     }
 
     @PostMapping
-    public void createTask(@RequestBody @Valid TaskRequestDTO taskDTO) throws Exception{
-        taskService.createTask(taskDTO);
+    public ResponseEntity<TaskResponseDTO> createTask(@RequestBody @Valid Task task){
+        TaskResponseDTO createdTask = taskService.createTask(task);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
     }
 
-    @PutMapping("/{task_id}")
-    public void updateTask(@RequestBody @Valid TaskRequestDTO updatedTaskDTO, @PathVariable Long task_id) throws Exception{
-        taskService.updateTask(updatedTaskDTO, task_id);
+    @PutMapping("/{id}")
+    public ResponseEntity<TaskResponseDTO> updateTask(@RequestBody @Valid TaskRequestDTO updatedTaskDTO, @PathVariable Long id){
+        TaskResponseDTO updatedTask = taskService.updateTask(updatedTaskDTO, id);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedTask);
     }
 
     @GetMapping("/user/{user_id}")
     public List<TaskResponseDTO> getTasksForUser(@PathVariable Long user_id) throws Exception{
         User user = userService.searchUserByUserId(user_id);
-        List<Task> tasks = taskService.getTasksByAssignedUser(user);
-        return tasks.stream()
-                .map(task -> taskMapper.toDto(task))
-                .toList();
+        return taskService.getTasksByAssignedUser(user);
     }
 
     @DeleteMapping("/{task_id}")
-    public void deleteTask(@PathVariable Long task_id) throws Exception{
+    public ResponseEntity<Void> deleteTask(@PathVariable Long task_id) throws Exception {
         taskService.deleteTask(task_id);
+        return ResponseEntity.noContent().build();
     }
 }

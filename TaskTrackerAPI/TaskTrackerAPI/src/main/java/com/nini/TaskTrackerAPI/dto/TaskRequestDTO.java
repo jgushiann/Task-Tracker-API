@@ -21,6 +21,9 @@ public class TaskRequestDTO {
 
     private String description;
 
+    @NotNull
+    private Long id;
+
     @NotNull(message = "Task status must be provided")
     private Status status;
 
@@ -34,5 +37,5 @@ public class TaskRequestDTO {
     private LocalDate dueDate;
 
     @NotNull(message = "Task must be assigned to the User")
-    private Long assignedUser;
+    private Long assignedUserId;
 }

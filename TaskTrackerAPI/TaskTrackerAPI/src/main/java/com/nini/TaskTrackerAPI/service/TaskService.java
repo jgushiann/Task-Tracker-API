@@ -1,28 +1,30 @@
 package com.nini.TaskTrackerAPI.service;
 
 import com.nini.TaskTrackerAPI.dto.TaskRequestDTO;
+import com.nini.TaskTrackerAPI.dto.TaskResponseDTO;
 import com.nini.TaskTrackerAPI.mapper.TaskMapper;
 import com.nini.TaskTrackerAPI.model.*;
 import com.nini.TaskTrackerAPI.repository.TaskRepository;
 import com.nini.TaskTrackerAPI.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class TaskService {
 
-    @Autowired
-    private TaskRepository taskRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UserService userService;
+    private final TaskMapper taskMapper;
 
-    public List<Task> searchTasks(String title, String description, Long id, Priority priority, Status status, Category category, LocalDate dueDate, Long user_id){
+    private final TaskRepository taskRepository;
+
+    private final UserRepository userRepository;
+
+    public List<TaskResponseDTO> searchTasks(String title, String description, Long id, Priority priority, Status status, Category category, LocalDate dueDate, Long user_id){
         if (title != null) return getTasksByTitleContaining(title);
         if (description != null) return getTasksByDescriptionContaining(description);
         if (id != null) return List.of(getTaskById(id));
@@ -34,92 +36,70 @@ public class TaskService {
         return getAll();
     }
 
-    public List<Task> getAll(){
-        return taskRepository.findAll();
+    public List<TaskResponseDTO> getAll(){
+        return taskRepository.findAll().stream().map(taskMapper::toDto).toList();
     }
 
     @Transactional
-    public void createTask(TaskRequestDTO taskDTO) throws Exception{
-        Task task = new Task();
-        task.setTitle(taskDTO.getTitle());
-        task.setDescription(taskDTO.getDescription());
-        task.setStatus(taskDTO.getStatus());
-        task.setPriority(taskDTO.getPriority());
-        task.setDueDate(taskDTO.getDueDate());
-        task.setCategory(taskDTO.getCategory());
-        task.setAssignedUser(userRepository.findByUserId(taskDTO.getAssignedUser()).orElse(null));
-
+    public TaskResponseDTO createTask(Task task){
         taskRepository.save(task);
+        return taskMapper.toDto(task);
     }
 
-    public Task searchTaskById(Long task_id){
-        return taskRepository.findByTaskId(task_id)
+    public TaskResponseDTO searchTaskById(Long task_id){
+        Task task = taskRepository.findByTaskId(task_id)
                 .orElseThrow(() -> new RuntimeException("No task found"));
+        return taskMapper.toDto(task);
     }
 
     @Transactional
-    public void updateTask(TaskRequestDTO updatedTaskDTO, Long task_id){
+    public TaskResponseDTO updateTask(TaskRequestDTO updatedTaskDTO, Long task_id){
         Task existingTask = taskRepository.findByTaskId(task_id)
                 .orElseThrow(() -> new RuntimeException("No task found"));
 
-        existingTask.setTitle(updatedTaskDTO.getTitle());
-        existingTask.setDescription(updatedTaskDTO.getDescription());
-        existingTask.setPriority(updatedTaskDTO.getPriority());
-        existingTask.setCategory(updatedTaskDTO.getCategory());
-        existingTask.setDueDate(updatedTaskDTO.getDueDate());
-        existingTask.setAssignedUser(userRepository.findByUserId(updatedTaskDTO.getAssignedUser()).orElse(null));
-        existingTask.setStatus(updatedTaskDTO.getStatus());
-
-        taskRepository.save(existingTask);
+        Task task = taskMapper.updateTask(updatedTaskDTO, existingTask);
+        taskRepository.save(task);
+        return taskMapper.toDto(task);
     }
 
     @Transactional
-    public void deleteTask(Long task_id) throws Exception {
-        if(taskRepository.existsByTaskId(task_id)){
-            deleteTaskById(task_id);
-        }else{
-            throw new Exception("No task found");
-        }
+    public void deleteTask(Long id) throws Exception {
+        Task task =  taskRepository.findByTaskId(id).orElseThrow(() -> new RuntimeException("No task found"));
+        taskRepository.deleteByTaskId(id);
     }
 
-    private Task getTaskById(Long id) {
-        return taskRepository.findByTaskId(id).
+    private TaskResponseDTO getTaskById(Long id) {
+        Task task = taskRepository.findByTaskId(id).
                 orElseThrow(() -> new RuntimeException("Task not found"));
+        return taskMapper.toDto(task);
     }
 
-    private List<Task> getTasksByPriority(Priority priority) {
-        return taskRepository.findByPriority(priority);
+    private List<TaskResponseDTO> getTasksByPriority(Priority priority) {
+        return taskRepository.findByPriority(priority).stream().map(taskMapper::toDto).toList();
     }
 
-    private List<Task> getTasksByCategory(Category category){
-        return taskRepository.findByCategory(category);
+    private List<TaskResponseDTO> getTasksByCategory(Category category){
+        return taskRepository.findByCategory(category).stream().map(taskMapper::toDto).toList();
     }
 
-    private List<Task> getTasksByStatus(Status status){
-        return taskRepository.findByStatus(status);
+    private List<TaskResponseDTO> getTasksByStatus(Status status){
+        return taskRepository.findByStatus(status).stream().map(taskMapper::toDto).toList();
     }
 
-    private List<Task> getTasksByDueDate(LocalDate dueDate){
-        return taskRepository.findByDueDate(dueDate);
+    private List<TaskResponseDTO> getTasksByDueDate(LocalDate dueDate){
+        return taskRepository.findByDueDate(dueDate).stream().map(taskMapper::toDto).toList();
     }
 
-    public List<Task> getTasksByAssignedUser(User assignedUser){
-        return taskRepository.findByAssignedUser(assignedUser);
+    public List<TaskResponseDTO> getTasksByAssignedUser(User assignedUser){
+        return taskRepository.findByAssignedUser(assignedUser).stream().map(taskMapper::toDto).toList();
     }
 
-    private List<Task> getTasksByTitleContaining(String title){
-        return taskRepository.findByTitleContaining(title);
+    private List<TaskResponseDTO> getTasksByTitleContaining(String title){
+        return taskRepository.findByTitleContaining(title).stream().map(taskMapper::toDto).toList();
     }
 
-    private List<Task> getTasksByDescriptionContaining(String description){
-        return taskRepository.findByDescriptionContaining(description);
+    private List<TaskResponseDTO> getTasksByDescriptionContaining(String description){
+        return taskRepository.findByDescriptionContaining(description).stream().map(taskMapper::toDto).toList();
     }
 
-    private void deleteTaskById(Long id) throws Exception {
-        if(taskRepository.existsByTaskId(id)){
-            taskRepository.deleteByTaskId(id);
-        }else{
-            throw new RuntimeException("Task does not exist");
-        }
-    }
 }
