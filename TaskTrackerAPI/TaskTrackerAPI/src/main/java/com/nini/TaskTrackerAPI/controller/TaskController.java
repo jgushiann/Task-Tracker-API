@@ -27,10 +27,6 @@ public class TaskController {
 
     private final UserService userService;
 
-    private final TaskMapper taskMapper;
-
-    private final UserMapper userMapper;
-
     @GetMapping
     public ResponseEntity<List<TaskResponseDTO>> searchTasks(@RequestParam(required = false) String title,
                                                             @RequestParam(required = false) String description,
