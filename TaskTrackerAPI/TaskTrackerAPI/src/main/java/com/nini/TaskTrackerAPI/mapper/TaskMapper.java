@@ -13,4 +13,5 @@ public interface TaskMapper {
     @Mapping(source = "assignedUser.userId", target = "assignedUser")
     TaskResponseDTO toDto(Task entity);
     Task updateTask(TaskRequestDTO updatedTaskDTO, @MappingTarget Task entity);
+    Task toEntity(TaskRequestDTO updatedTaskDTO);
 }

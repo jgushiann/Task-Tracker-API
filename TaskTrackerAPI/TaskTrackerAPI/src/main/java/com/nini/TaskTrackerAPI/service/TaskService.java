@@ -41,7 +41,8 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskResponseDTO createTask(Task task){
+    public TaskResponseDTO createTask(TaskRequestDTO taskDto){
+        Task task = taskMapper.toEntity(taskDto);
         taskRepository.save(task);
         return taskMapper.toDto(task);
     }
