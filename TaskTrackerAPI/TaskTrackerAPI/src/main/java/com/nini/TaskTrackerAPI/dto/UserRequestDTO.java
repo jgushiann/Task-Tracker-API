@@ -9,6 +9,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRequestDTO {
+    private Long id;
+
     @NotBlank(message = "First name of the User must be provided")
     @Size(min = 5, max = 100, message = "First name must be between 5 and 100 characters")
     private String firstName;

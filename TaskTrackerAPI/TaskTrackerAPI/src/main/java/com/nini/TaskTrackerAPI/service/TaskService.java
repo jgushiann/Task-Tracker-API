@@ -2,6 +2,8 @@ package com.nini.TaskTrackerAPI.service;
 
 import com.nini.TaskTrackerAPI.dto.TaskRequestDTO;
 import com.nini.TaskTrackerAPI.dto.TaskResponseDTO;
+import com.nini.TaskTrackerAPI.exception.AlreadyExistsException;
+import com.nini.TaskTrackerAPI.exception.NotFoundException;
 import com.nini.TaskTrackerAPI.mapper.TaskMapper;
 import com.nini.TaskTrackerAPI.model.*;
 import com.nini.TaskTrackerAPI.repository.TaskRepository;
@@ -42,6 +44,9 @@ public class TaskService {
 
     @Transactional
     public TaskResponseDTO createTask(TaskRequestDTO taskDto){
+        if(!taskRepository.findByTitleContaining(taskDto.getTitle()).isEmpty()){
+            throw new AlreadyExistsException("Title already exists");
+        }
         Task task = taskMapper.toEntity(taskDto);
         taskRepository.save(task);
         return taskMapper.toDto(task);
@@ -56,7 +61,7 @@ public class TaskService {
     @Transactional
     public TaskResponseDTO updateTask(TaskRequestDTO updatedTaskDTO, Long task_id){
         Task existingTask = taskRepository.findByTaskId(task_id)
-                .orElseThrow(() -> new RuntimeException("No task found"));
+                .orElseThrow(() -> new NotFoundException("No task found"));
 
         Task task = taskMapper.updateTask(updatedTaskDTO, existingTask);
         taskRepository.save(task);
@@ -64,14 +69,14 @@ public class TaskService {
     }
 
     @Transactional
-    public void deleteTask(Long id) throws Exception {
-        Task task =  taskRepository.findByTaskId(id).orElseThrow(() -> new RuntimeException("No task found"));
+    public void deleteTask(Long id) {
+        Task task =  taskRepository.findByTaskId(id).orElseThrow(() -> new NotFoundException("No task found"));
         taskRepository.deleteByTaskId(id);
     }
 
     private TaskResponseDTO getTaskById(Long id) {
         Task task = taskRepository.findByTaskId(id).
-                orElseThrow(() -> new RuntimeException("Task not found"));
+                orElseThrow(() -> new NotFoundException("Task not found"));
         return taskMapper.toDto(task);
     }
 

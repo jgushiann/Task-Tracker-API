@@ -22,7 +22,5 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByTitleContaining(String title);
     List<Task> findByDescriptionContaining(String description);
 
-    Boolean existsByTaskId(long taskId);
-
     void deleteByTaskId(long taskId);
 }

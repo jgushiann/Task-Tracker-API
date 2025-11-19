@@ -59,13 +59,13 @@ public class TaskController {
     }
 
     @GetMapping("/user/{user_id}")
-    public List<TaskResponseDTO> getTasksForUser(@PathVariable Long user_id) throws Exception{
+    public List<TaskResponseDTO> getTasksForUser(@PathVariable Long user_id){
         User user = userService.searchUserByUserId(user_id);
         return taskService.getTasksByAssignedUser(user);
     }
 
     @DeleteMapping("/{task_id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long task_id) throws Exception {
+    public ResponseEntity<Void> deleteTask(@PathVariable Long task_id) {
         taskService.deleteTask(task_id);
         return ResponseEntity.noContent().build();
     }

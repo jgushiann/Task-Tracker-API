@@ -3,7 +3,9 @@ package com.nini.TaskTrackerAPI.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +20,8 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@NoArgsConstructor
+@AllArgsConstructor
 public class User implements UserDetails {
 
     @Id
@@ -43,17 +47,6 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "assignedUser", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Task> tasks;
-
-    public User(){}
-
-    public User(String first_name, String last_name, String email, String username, String password) {
-        this.firstName = first_name;
-        this.lastName = last_name;
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.tasks = new ArrayList<>();
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
