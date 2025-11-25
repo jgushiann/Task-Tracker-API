@@ -64,16 +64,15 @@ public class TaskController {
     }
 
     @Operation(summary = "Get all the tasks assigned to the user")
-    @GetMapping("/user/{user_id}")
-    public List<TaskResponseDTO> getTasksForUser(@PathVariable Long user_id){
-        User user = userService.searchUserByUserId(user_id);
-        return taskService.getTasksByAssignedUser(user);
+    @GetMapping("/user/{id}")
+    public ResponseEntity<List<TaskResponseDTO>> getTasksForUser(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.OK).body(taskService.getTasksByAssignedUserId(id));
     }
 
     @Operation(summary = "Delete a task by its ID")
-    @DeleteMapping("/{task_id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long task_id) {
-        taskService.deleteTask(task_id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
         return ResponseEntity.noContent().build();
     }
 }

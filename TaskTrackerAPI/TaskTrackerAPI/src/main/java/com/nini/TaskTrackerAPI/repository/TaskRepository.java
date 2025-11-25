@@ -17,7 +17,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByCategory(Category category);
     List<Task> findByStatus(Status status);
     List<Task> findByDueDate(LocalDate dueDate);
-    List<Task> findByAssignedUser(User assignedUser);
+    List<Task> findByAssignedUser(User user);
 
     List<Task> findByTitleContaining(String title);
     List<Task> findByDescriptionContaining(String description);

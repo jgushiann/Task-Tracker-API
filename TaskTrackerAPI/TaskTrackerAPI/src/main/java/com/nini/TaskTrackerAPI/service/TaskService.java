@@ -34,7 +34,7 @@ public class TaskService {
         if (status != null) return getTasksByStatus(status);
         if (category != null) return getTasksByCategory(category);
         if (dueDate != null) return getTasksByDueDate(dueDate);
-        if (user_id != null) return getTasksByAssignedUser(userRepository.findByUserId(user_id).orElse(null));
+        if (user_id != null) return getTasksByAssignedUserId(user_id);
         return getAll();
     }
 
@@ -96,8 +96,8 @@ public class TaskService {
         return taskRepository.findByDueDate(dueDate).stream().map(taskMapper::toDto).toList();
     }
 
-    public List<TaskResponseDTO> getTasksByAssignedUser(User assignedUser){
-        return taskRepository.findByAssignedUser(assignedUser).stream().map(taskMapper::toDto).toList();
+    public List<TaskResponseDTO> getTasksByAssignedUserId(Long id){
+        return taskRepository.findByAssignedUser(userRepository.findByUserId(id).orElse(null)).stream().map(taskMapper::toDto).toList();
     }
 
     private List<TaskResponseDTO> getTasksByTitleContaining(String title){

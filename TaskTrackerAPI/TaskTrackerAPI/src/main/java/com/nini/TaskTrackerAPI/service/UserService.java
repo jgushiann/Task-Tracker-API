@@ -64,7 +64,7 @@ public class UserService implements UserDetailsService {
 
     public List<TaskResponseDTO> getTasksByUserId(Long user_id){
         User user = userRepository.findByUserId(user_id).orElseThrow(() -> new NotFoundException("User not found"));
-        return taskRepository.findByAssignedUser(user)
+        return taskRepository.findByAssignedUserId(user_id)
                 .stream()
                 .map(taskMapper::toDto)
                 .toList();
