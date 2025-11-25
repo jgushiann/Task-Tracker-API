@@ -47,7 +47,7 @@ public class UserController {
         User user = (User) userService.loadUserByUsername(userRequestDTO.getUsername());
 
         if(passwordEncoder.matches(userRequestDTO.getPassword(), user.getPassword())){
-            String token = jwtUtil.generateToken(userRequestDTO.getUsername());
+            String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
@@ -72,30 +72,30 @@ public class UserController {
     }
 
     @Operation(summary = "Get a user by its ID")
-    @GetMapping("/users/{user_id}")
-    public ResponseEntity<UserResponseDTO> getUser(@PathVariable Long user_id) {
-        User user = userService.searchUserByUserId(user_id);
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserResponseDTO> getUser(@PathVariable Long id) {
+        User user = userService.searchUserByUserId(id);
         return ResponseEntity.status(HttpStatus.OK).body(userMapper.toDto(user));
     }
 
     @Operation(summary = "Update an existing user")
-    @PutMapping("/users/{user_id}")
-    public ResponseEntity<UserResponseDTO> updateUser(@RequestBody @Valid UserRequestDTO updatedUserDTO,@PathVariable Long user_id){
-        UserResponseDTO updated = userService.updateUser(user_id, updatedUserDTO);
+    @PutMapping("/users/{id}")
+    public ResponseEntity<UserResponseDTO> updateUser(@RequestBody @Valid UserRequestDTO updatedUserDTO,@PathVariable Long id){
+        UserResponseDTO updated = userService.updateUser(id, updatedUserDTO);
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
 
     @Operation(summary = "Get all the tasks related to a specific user")
-    @GetMapping("/users/{user_id}/tasks")
-    public ResponseEntity<List<TaskResponseDTO>> getTasksByUserId(@PathVariable Long user_id){
-        List<TaskResponseDTO> tasks = userService.getTasksByUserId(user_id);
+    @GetMapping("/users/{id}/tasks")
+    public ResponseEntity<List<TaskResponseDTO>> getTasksByUserId(@PathVariable Long id){
+        List<TaskResponseDTO> tasks = userService.getTasksByUserId(id);
         return ResponseEntity.status(HttpStatus.OK).body(tasks);
     }
 
     @Operation(summary = "Delete an existing user")
-    @DeleteMapping("/users/{user_id}")
-    public ResponseEntity<Void> deleteUsers(@PathVariable Long user_id){
-        userService.deleteUsers(user_id);
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id){
+        userService.deleteUsers(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,5 +1,6 @@
 package com.nini.TaskTrackerAPI.dto;
 
+import com.nini.TaskTrackerAPI.model.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -16,6 +17,8 @@ public class UserRequestDTO {
 
     @Size(min = 5, max = 100, message = "Last name must be between 5 and 100 characters")
     private String lastName;
+
+    private Role role;
 
     private String email;
 

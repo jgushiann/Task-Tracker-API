@@ -1,5 +1,6 @@
 package com.nini.TaskTrackerAPI.security;
 
+import com.nini.TaskTrackerAPI.model.Role;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ import java.util.Date;
 public class JwtUtil {
     private static final String SECRET = "mysupersecretkeyformyjwtthatistoolong321";
 
-    public String generateToken(String username){
+    public String generateToken(String username, Role role){
         return Jwts.builder()
                 .subject(username)
                 .issuedAt(new Date())

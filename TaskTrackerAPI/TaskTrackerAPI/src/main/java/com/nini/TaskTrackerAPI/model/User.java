@@ -44,6 +44,9 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "role", nullable = false)
+    private Role role;
+
     @OneToMany(mappedBy = "assignedUser", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Task> tasks;
