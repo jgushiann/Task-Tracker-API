@@ -15,7 +15,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,38 +32,35 @@ public class UserService implements UserDetailsService {
     private final TaskMapper taskMapper;
 
     public List<UserResponseDTO> searchUser(String firstname, String lastname,String username, String email, Long id) {
-        if (firstname != null) return getUserByFirstNameContaining(firstname);
-        if (lastname != null) return getUserByLastNameContaining(lastname);
-        if (username != null) return getUserByUsernameContaining(username);
-        if (email != null) return getUserByEmailContaining(email);
-        if (id != null) return List.of(getUserById(id));
-
-        return getAll();
+        if(firstname == null && lastname == null && username == null && email == null && id == null) {
+            return getAll();
+        }
+        return userRepository.searchUsers(firstname, lastname, username, email, id).stream().map(userMapper::toDto).toList();
     }
 
     public User searchUserByUserId(Long user_id){
-        return userRepository.findById(user_id).orElse(null);
+        return userRepository.findById(user_id).orElseThrow(()->new NotFoundException("User not found"));
     }
 
     @Transactional
     public UserResponseDTO updateUser(Long user_id, UserRequestDTO updatedUserDTO) {
-        User user = userRepository.findById(user_id)
+        User user = userRepository.findByUserId(user_id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
         User updated = userMapper.updateEntity(updatedUserDTO, user);
-        userRepository.save(user);
+        userRepository.save(updated);
         return userMapper.toDto(updated);
     }
 
     @Transactional
     public void deleteUsers(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
-        userRepository.deleteByUserId(user.getUserId());
+        userRepository.deleteByUserId(id);
     }
 
     public List<TaskResponseDTO> getTasksByUserId(Long user_id){
         User user = userRepository.findByUserId(user_id).orElseThrow(() -> new NotFoundException("User not found"));
-        return taskRepository.findByAssignedUserId(user_id)
+        return taskRepository.findByAssignedUser(user)
                 .stream()
                 .map(taskMapper::toDto)
                 .toList();
