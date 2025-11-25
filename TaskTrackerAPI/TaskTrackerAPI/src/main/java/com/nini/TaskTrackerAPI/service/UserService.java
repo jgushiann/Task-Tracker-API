@@ -7,6 +7,7 @@ import com.nini.TaskTrackerAPI.exception.AlreadyExistsException;
 import com.nini.TaskTrackerAPI.exception.NotFoundException;
 import com.nini.TaskTrackerAPI.mapper.TaskMapper;
 import com.nini.TaskTrackerAPI.mapper.UserMapper;
+import com.nini.TaskTrackerAPI.model.Role;
 import com.nini.TaskTrackerAPI.model.User;
 import com.nini.TaskTrackerAPI.repository.TaskRepository;
 import com.nini.TaskTrackerAPI.repository.UserRepository;
@@ -75,6 +76,7 @@ public class UserService implements UserDetailsService {
             throw new AlreadyExistsException("User already exists");
         }
         User user = userMapper.toEntity(userDTO);
+        user.setRole(Role.USER);
         userRepository.save(user);
         return userMapper.toDto(user);
     }

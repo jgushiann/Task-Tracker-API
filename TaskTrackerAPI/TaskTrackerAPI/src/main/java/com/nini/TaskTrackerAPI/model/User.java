@@ -45,7 +45,7 @@ public class User implements UserDetails {
     private String password;
 
     @Column(name = "role", nullable = false)
-    private Role role;
+    private Role role = Role.USER;
 
     @OneToMany(mappedBy = "assignedUser", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
