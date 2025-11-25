@@ -18,8 +18,6 @@ public class UserRequestDTO {
     @Size(min = 5, max = 100, message = "Last name must be between 5 and 100 characters")
     private String lastName;
 
-    private Role role;
-
     private String email;
 
     @NotBlank(message = "Username is required")

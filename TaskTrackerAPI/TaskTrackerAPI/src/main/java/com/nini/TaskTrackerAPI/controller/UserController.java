@@ -43,7 +43,7 @@ public class UserController {
 
     @Operation(summary = "Login a user")
     @PostMapping("/auth/login")
-    public ResponseEntity<UserResponseDTO> login(@RequestBody UserRequestDTO userRequestDTO) throws Exception {
+    public ResponseEntity<UserResponseDTO> login(@RequestBody UserRequestDTO userRequestDTO){
         User user = (User) userService.loadUserByUsername(userRequestDTO.getUsername());
 
         if(passwordEncoder.matches(userRequestDTO.getPassword(), user.getPassword())){
