@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User searchUserByUserId(Long user_id){
-        return userRepository.findById(user_id).orElseThrow(()->new NotFoundException("User not found"));
+        return userRepository.findByUserId(user_id).orElseThrow(()->new NotFoundException("User not found"));
     }
 
     @Transactional
@@ -53,9 +54,11 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void deleteUsers(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
-        userRepository.deleteByUserId(id);
+    public void deleteUsers(Long user_id) {
+        if(!userRepository.existsByUserId(user_id)) {
+            throw new NotFoundException("User not found");
+        }
+        userRepository.deleteByUserId(user_id);
     }
 
     public List<TaskResponseDTO> getTasksByUserId(Long user_id){
@@ -71,6 +74,9 @@ public class UserService implements UserDetailsService {
         if(userRepository.findByUsername(userDTO.getUsername()).isPresent()){
             throw new AlreadyExistsException("User already exists");
         }
+        if(userRepository.findByEmail(userDTO.getEmail()).isPresent()){
+            throw new AlreadyExistsException("Email already exists");
+        }
         User user = userMapper.toEntity(userDTO);
         user.setRole(Role.USER);
         userRepository.save(user);
@@ -84,43 +90,8 @@ public class UserService implements UserDetailsService {
                 .toList();
     }
 
-    private UserResponseDTO getUserById(Long id) {
-        User user = userRepository.findByUserId(id)
-                .orElseThrow(() -> new NotFoundException("User not found with id" + id));
-
-        return userMapper.toDto(user);
-    }
-
-    private List<UserResponseDTO> getUserByFirstNameContaining(String firstName){
-        return userRepository.findByFirstNameContaining(firstName)
-                .stream()
-                .map(userMapper::toDto)
-                .toList();
-    }
-
-    private List<UserResponseDTO> getUserByLastNameContaining(String lastName){
-        return userRepository.findByLastNameContaining(lastName)
-                .stream()
-                .map(userMapper::toDto)
-                .toList();
-    }
-
-    private List<UserResponseDTO> getUserByEmailContaining(String email){
-        return userRepository.findByEmailContaining(email)
-                .stream()
-                .map(userMapper::toDto)
-                .toList();
-    }
-
-    private List<UserResponseDTO> getUserByUsernameContaining(String username){
-        return userRepository.findByUsernameContaining(username)
-                .stream()
-                .map(userMapper::toDto)
-                .toList();
-    }
-
     @Override
     public UserDetails loadUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("User not found with username: " + username));
+        return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
     }
 }
