@@ -26,16 +26,16 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "user_id", nullable = false, unique = true)
+    @Column(name = "user_id")
     private long userId;
 
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email")
     private String email;
 
     @Column(name = "username", nullable = false, unique = true)

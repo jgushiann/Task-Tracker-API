@@ -11,15 +11,12 @@ import lombok.*;
 public class UserRequestDTO {
     private Long id;
 
-    @NotBlank(message = "First name of the User must be provided")
     @Size(min = 5, max = 100, message = "First name must be between 5 and 100 characters")
     private String firstName;
 
-    @NotBlank(message = "Last name of the User must be provided")
     @Size(min = 5, max = 100, message = "Last name must be between 5 and 100 characters")
     private String lastName;
 
-    @Email
     private String email;
 
     @NotBlank(message = "Username is required")
