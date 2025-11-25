@@ -28,12 +28,15 @@ public class Task {
     private String description;
 
     @Column(name = "priority")
+    @Enumerated(EnumType.STRING)
     private Priority priority;
 
     @Column(name = "category")
+    @Enumerated(EnumType.STRING)
     private Category category;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @Column(name = "due_date")
