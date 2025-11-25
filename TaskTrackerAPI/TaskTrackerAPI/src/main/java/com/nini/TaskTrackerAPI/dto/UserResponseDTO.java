@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class UserResponseDTO{
+    String token;
     String firstName;
     String lastName;
     String email;
