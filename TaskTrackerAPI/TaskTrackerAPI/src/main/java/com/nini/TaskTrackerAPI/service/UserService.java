@@ -40,12 +40,12 @@ public class UserService implements UserDetailsService {
     }
 
     public User searchUserByUserId(Long user_id){
-        return userRepository.findByUserId(user_id).orElseThrow(()->new NotFoundException("User not found"));
+        return userRepository.findById(user_id).orElseThrow(()->new NotFoundException("User not found"));
     }
 
     @Transactional
     public UserResponseDTO updateUser(Long user_id, UserRequestDTO updatedUserDTO) {
-        User user = userRepository.findByUserId(user_id)
+        User user = userRepository.findById(user_id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
         User updated = userMapper.updateEntity(updatedUserDTO, user);
@@ -55,14 +55,14 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void deleteUsers(Long user_id) {
-        if(!userRepository.existsByUserId(user_id)) {
+        if(!userRepository.existsById(user_id)) {
             throw new NotFoundException("User not found");
         }
-        userRepository.deleteByUserId(user_id);
+        userRepository.deleteById(user_id);
     }
 
     public List<TaskResponseDTO> getTasksByUserId(Long user_id){
-        User user = userRepository.findByUserId(user_id).orElseThrow(() -> new NotFoundException("User not found"));
+        User user = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("User not found"));
         return taskRepository.findByAssignedUser(user)
                 .stream()
                 .map(taskMapper::toDto)
