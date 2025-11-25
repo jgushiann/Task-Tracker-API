@@ -6,6 +6,7 @@ import com.nini.TaskTrackerAPI.dto.UserResponseDTO;
 import com.nini.TaskTrackerAPI.mapper.UserMapper;
 import com.nini.TaskTrackerAPI.model.User;
 import com.nini.TaskTrackerAPI.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,12 +28,15 @@ public class UserController {
 
     private final PasswordEncoder passwordEncoder;
 
+
+    @Operation(summary = "Register a user")
     @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> register(@RequestBody UserRequestDTO userRequestDTO){
         UserResponseDTO user = userService.createUser(userRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
+    @Operation(summary = "Login a user")
     @PostMapping("/login")
     public ResponseEntity<UserResponseDTO> login(@RequestBody UserRequestDTO userRequestDTO) throws Exception {
         String username = userRequestDTO.getUsername();
@@ -47,6 +51,7 @@ public class UserController {
     }
 
 
+    @Operation(summary = "Get all/specific user from DB")
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getUsers(@RequestParam(required = false) String firstname,
                                           @RequestParam(required = false) String lastname,
@@ -57,30 +62,28 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
-    @PostMapping
-    public ResponseEntity<UserResponseDTO> addUser(@RequestBody @Valid UserRequestDTO userDTO) {
-        UserResponseDTO userDto = userService.createUser(userDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
-    }
-
+    @Operation(summary = "Get a user by its ID")
     @GetMapping("/{user_id}")
     public ResponseEntity<UserResponseDTO> getUser(@PathVariable Long user_id) {
         User user = userService.searchUserByUserId(user_id);
         return ResponseEntity.status(HttpStatus.OK).body(userMapper.toDto(user));
     }
 
+    @Operation(summary = "Update an existing user")
     @PutMapping("/{user_id}")
     public ResponseEntity<UserResponseDTO> updateUser(@RequestBody @Valid UserRequestDTO updatedUserDTO,@PathVariable Long user_id){
         UserResponseDTO updated = userService.updateUser(user_id, updatedUserDTO);
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
 
+    @Operation(summary = "Get all the tasks related to a specific user")
     @GetMapping("/{user_id}/tasks")
     public ResponseEntity<List<TaskResponseDTO>> getTasksByUserId(@PathVariable Long user_id){
         List<TaskResponseDTO> tasks = userService.getTasksByUserId(user_id);
         return ResponseEntity.status(HttpStatus.OK).body(tasks);
     }
 
+    @Operation(summary = "Delete an existing user")
     @DeleteMapping("/{user_id}")
     public ResponseEntity<Void> deleteUsers(@PathVariable Long user_id){
         userService.deleteUsers(user_id);
