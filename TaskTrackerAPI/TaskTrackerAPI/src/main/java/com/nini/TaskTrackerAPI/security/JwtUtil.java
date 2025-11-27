@@ -1,6 +1,7 @@
 package com.nini.TaskTrackerAPI.security;
 
 import com.nini.TaskTrackerAPI.model.Role;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +45,11 @@ public class JwtUtil {
     }
 
     public boolean isTokenValid(String token, String username){
-        return username.equals(extractUsername(token)) && !isExpired(token);
+        try{
+            return username.equals(extractUsername(token)) && !isExpired(token);
+        }catch (Exception e){
+            throw new JwtException("Invalid token");
+        }
     }
 
     private boolean isExpired(String token) {
