@@ -3,6 +3,7 @@ package com.nini.TaskTrackerAPI.security;
 import com.nini.TaskTrackerAPI.model.Role;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -12,11 +13,16 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private static final String SECRET = "mysupersecretkeyformyjwtthatistoolong321";
+    private final String secretKey;
+
+    public JwtUtil(@Value("${jwt.secretKey}") String secretKey) {
+        this.secretKey = secretKey;
+    }
 
     public String generateToken(String username, Role role){
         return Jwts.builder()
                 .subject(username)
+                .claim("role", role)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 3600*1000))
                 .signWith(getSigningKey())
@@ -24,7 +30,7 @@ public class JwtUtil {
     }
 
     private Key getSigningKey(){
-        byte[] keyBytes = SECRET.getBytes(StandardCharsets.UTF_8);
+        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -37,8 +43,8 @@ public class JwtUtil {
                 .getSubject();
     }
 
-    public boolean isTokenValid(String token){
-        return !isExpired(token);
+    public boolean isTokenValid(String token, String username){
+        return username.equals(extractUsername(token)) && !isExpired(token);
     }
 
     private boolean isExpired(String token) {
