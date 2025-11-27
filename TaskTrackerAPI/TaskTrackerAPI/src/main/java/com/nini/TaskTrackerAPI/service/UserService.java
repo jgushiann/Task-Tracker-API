@@ -17,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,6 +50,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
         User updated = userMapper.updateEntity(updatedUserDTO, user);
+        updated.setPassword(new BCryptPasswordEncoder().encode(updatedUserDTO.getPassword()));
         userRepository.save(updated);
         return userMapper.toDto(updated);
     }
