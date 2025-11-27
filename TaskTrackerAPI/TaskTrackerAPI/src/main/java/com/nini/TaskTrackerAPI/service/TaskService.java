@@ -27,24 +27,22 @@ public class TaskService {
     private final UserRepository userRepository;
 
     public List<TaskResponseDTO> searchTasks(String title, String description, Long id, Priority priority, Status status, Category category, LocalDate dueDate, Long user_id){
-        if (title != null) return getTasksByTitleContaining(title);
-        if (description != null) return getTasksByDescriptionContaining(description);
-        if (id != null) return List.of(getTaskById(id));
-        if (priority != null) return getTasksByPriority(priority);
-        if (status != null) return getTasksByStatus(status);
-        if (category != null) return getTasksByCategory(category);
-        if (dueDate != null) return getTasksByDueDate(dueDate);
-        if (user_id != null) return getTasksByAssignedUserId(user_id);
-        return getAll();
+        if(title == null && description == null && id == null && priority == null && status == null && category == null && dueDate == null && user_id == null){
+            return getAll();
+        }
+        return taskRepository.searchTasks(title,description,id, priority, status, category, dueDate, user_id).stream().map(taskMapper::toDto).toList();
     }
 
     public List<TaskResponseDTO> getAll(){
-        return taskRepository.findAll().stream().map(taskMapper::toDto).toList();
+        return taskRepository.findAll()
+                .stream()
+                .map(taskMapper::toDto)
+                .toList();
     }
 
     @Transactional
     public TaskResponseDTO createTask(TaskRequestDTO taskDto){
-        if(!taskRepository.findByTitleContaining(taskDto.getTitle()).isEmpty()){
+        if(!taskRepository.findByTitle(taskDto.getTitle()).isEmpty()){
             throw new AlreadyExistsException("Title already exists");
         }
         Task task = taskMapper.toEntity(taskDto);
@@ -54,7 +52,7 @@ public class TaskService {
 
     public TaskResponseDTO searchTaskById(Long task_id){
         Task task = taskRepository.findByTaskId(task_id)
-                .orElseThrow(() -> new RuntimeException("No task found"));
+                .orElseThrow(() -> new NotFoundException("No task found"));
         return taskMapper.toDto(task);
     }
 
@@ -70,42 +68,14 @@ public class TaskService {
 
     @Transactional
     public void deleteTask(Long id) {
-        Task task =  taskRepository.findByTaskId(id).orElseThrow(() -> new NotFoundException("No task found"));
+        if(!taskRepository.existsById(id)){
+            throw new NotFoundException("No task found");
+        }
         taskRepository.deleteByTaskId(id);
     }
 
-    private TaskResponseDTO getTaskById(Long id) {
-        Task task = taskRepository.findByTaskId(id).
-                orElseThrow(() -> new NotFoundException("Task not found"));
-        return taskMapper.toDto(task);
-    }
-
-    private List<TaskResponseDTO> getTasksByPriority(Priority priority) {
-        return taskRepository.findByPriority(priority).stream().map(taskMapper::toDto).toList();
-    }
-
-    private List<TaskResponseDTO> getTasksByCategory(Category category){
-        return taskRepository.findByCategory(category).stream().map(taskMapper::toDto).toList();
-    }
-
-    private List<TaskResponseDTO> getTasksByStatus(Status status){
-        return taskRepository.findByStatus(status).stream().map(taskMapper::toDto).toList();
-    }
-
-    private List<TaskResponseDTO> getTasksByDueDate(LocalDate dueDate){
-        return taskRepository.findByDueDate(dueDate).stream().map(taskMapper::toDto).toList();
-    }
-
     public List<TaskResponseDTO> getTasksByAssignedUserId(Long id){
-        return taskRepository.findByAssignedUser(userRepository.findByUserId(id).orElse(null)).stream().map(taskMapper::toDto).toList();
-    }
-
-    private List<TaskResponseDTO> getTasksByTitleContaining(String title){
-        return taskRepository.findByTitleContaining(title).stream().map(taskMapper::toDto).toList();
-    }
-
-    private List<TaskResponseDTO> getTasksByDescriptionContaining(String description){
-        return taskRepository.findByDescriptionContaining(description).stream().map(taskMapper::toDto).toList();
+        return taskRepository.findByAssignedUser(userRepository.findById(id).orElseThrow(() -> new NotFoundException("User does not exist"))).stream().map(taskMapper::toDto).toList();
     }
 
 }
