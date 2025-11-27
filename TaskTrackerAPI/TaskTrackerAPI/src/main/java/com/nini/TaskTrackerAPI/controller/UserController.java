@@ -52,7 +52,6 @@ public class UserController {
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
             UserResponseDTO userResponseDTO = userMapper.toDto(user);
-            userResponseDTO.setToken(token);
             return ResponseEntity.status(HttpStatus.OK).body(userResponseDTO);
         }else{
             throw new IncorrectCredentialsException("Invalid username or password");
