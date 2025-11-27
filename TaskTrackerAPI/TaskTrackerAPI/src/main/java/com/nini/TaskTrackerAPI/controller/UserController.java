@@ -52,6 +52,7 @@ public class UserController {
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
             UserResponseDTO userResponseDTO = userMapper.toDto(user);
+            System.out.println(token);
             userResponseDTO.setToken(token);
             return ResponseEntity.status(HttpStatus.OK).body(userResponseDTO);
         }else{
