@@ -40,8 +40,9 @@ public class UserService implements UserDetailsService {
         return userRepository.searchUsers(firstname, lastname, username, email, id).stream().map(userMapper::toDto).toList();
     }
 
-    public User searchUserByUserId(Long user_id){
-        return userRepository.findById(user_id).orElseThrow(()->new NotFoundException("User not found"));
+    public UserResponseDTO searchUserByUserId(Long user_id){
+        User user = userRepository.findById(user_id).orElseThrow(()->new NotFoundException("User not found"));
+        return userMapper.toDto(user);
     }
 
     @Transactional

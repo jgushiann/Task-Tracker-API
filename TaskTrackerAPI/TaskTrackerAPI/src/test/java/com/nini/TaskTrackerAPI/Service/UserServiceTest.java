@@ -3,7 +3,6 @@ package com.nini.TaskTrackerAPI.Service;
 import com.nini.TaskTrackerAPI.dto.UserRequestDTO;
 import com.nini.TaskTrackerAPI.dto.UserResponseDTO;
 import com.nini.TaskTrackerAPI.mapper.UserMapper;
-import com.nini.TaskTrackerAPI.model.Role;
 import com.nini.TaskTrackerAPI.model.User;
 import com.nini.TaskTrackerAPI.repository.UserRepository;
 import com.nini.TaskTrackerAPI.service.UserService;
@@ -12,10 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -69,10 +66,25 @@ public class UserServiceTest {
 
         verify(userRepository).searchUsers(firstname, null, null, null, null);
     }
-    
+
     @Test
     void shouldSearchUserByUserId(){
+        User user = new User();
+        user.setUserId(1L);
+        user.setUsername("user");
 
+        UserResponseDTO userResponseDTO1 = new UserResponseDTO();
+        userResponseDTO1.setUsername("user");
+
+        when(userRepository.findById(user.getUserId()))
+                .thenReturn(Optional.of(user));
+        when(userMapper.toDto(user))
+                .thenReturn(userResponseDTO1);
+
+        UserResponseDTO userDto = userService.searchUserByUserId(1L);
+        assertEquals(userResponseDTO1.getUsername(), userDto.getUsername());
+        verify(userRepository).findById(1L);
+        verify(userMapper).toDto(user);
     }
 
     @Test
@@ -120,7 +132,7 @@ public class UserServiceTest {
 
     @Test
     void shouldUpdateUser() {
-
+        
     }
 
 

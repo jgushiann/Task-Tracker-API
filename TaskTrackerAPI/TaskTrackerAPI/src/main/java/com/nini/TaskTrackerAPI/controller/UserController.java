@@ -75,8 +75,8 @@ public class UserController {
     @Operation(summary = "Get a user by its ID")
     @GetMapping("/users/{id}")
     public ResponseEntity<UserResponseDTO> getUser(@PathVariable Long id) {
-        User user = userService.searchUserByUserId(id);
-        return ResponseEntity.status(HttpStatus.OK).body(userMapper.toDto(user));
+        UserResponseDTO userDto = userService.searchUserByUserId(id);
+        return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
     @Operation(summary = "Update an existing user")
