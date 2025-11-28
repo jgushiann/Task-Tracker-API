@@ -21,14 +21,14 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query(
             """ 
 SELECT task FROM Task task
-WHERE (:firstname IS NULL OR task.title = :title)
-AND   (:lastname IS NULL OR task.description = :description)
-AND   (:username IS NULL OR task.taskId = :id)
-AND   (:email IS NULL OR task.priority = :priority)
-AND   (:id IS NULL OR task.status = :status)
-AND   (:id IS NULL OR task.category = :category)
-AND   (:id IS NULL OR task.dueDate = :dueDate)
-AND   (:id IS NULL OR task.assignedUser = :user_id)
+WHERE (:title IS NULL OR task.title = :title)
+AND   (:description IS NULL OR task.description = :description)
+AND   (:id IS NULL OR task.taskId = :id)
+AND   (:priority IS NULL OR task.priority = :priority)
+AND   (:status IS NULL OR task.status = :status)
+AND   (:category IS NULL OR task.category = :category)
+AND   (:dueDate IS NULL OR task.dueDate = :dueDate)
+AND   (:user_id IS NULL OR task.assignedUser = :user_id)
 """
     )
     List<Task> searchTasks(@Param("title") String title,

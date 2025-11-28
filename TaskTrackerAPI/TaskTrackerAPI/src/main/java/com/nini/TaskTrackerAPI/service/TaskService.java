@@ -46,6 +46,7 @@ public class TaskService {
             throw new AlreadyExistsException("Title already exists");
         }
         Task task = taskMapper.toEntity(taskDto);
+        task.setAssignedUser(userRepository.findById(taskDto.getAssignedUserId()).orElseThrow(() -> new NotFoundException("User not found")));
         taskRepository.save(task);
         return taskMapper.toDto(task);
     }
