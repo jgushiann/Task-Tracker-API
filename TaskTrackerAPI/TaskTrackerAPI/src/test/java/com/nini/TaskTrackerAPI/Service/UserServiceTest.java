@@ -14,6 +14,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -25,6 +28,52 @@ public class UserServiceTest {
     private UserMapper userMapper;
     @InjectMocks
     private UserService userService;
+
+    @Test
+    void shouldSearchUser(){
+        String firstname = "user";
+
+        User user1 = new User();
+        user1.setUserId(1);
+        user1.setUsername("user");
+
+        User user2 = new User();
+        user2.setUserId(2);
+        user2.setUsername("user2");
+
+        UserResponseDTO userResponseDTO1 = new UserResponseDTO();
+        userResponseDTO1.setUsername("user");
+
+        UserResponseDTO userResponseDTO2 = new UserResponseDTO();
+        userResponseDTO2.setUsername("user2");
+
+        when(userMapper.toDto(user1))
+                .thenReturn(userResponseDTO1);
+        when(userMapper.toDto(user2))
+                .thenReturn(userResponseDTO2);
+        when(userRepository.searchUsers(firstname, null, null, null, null))
+                .thenReturn(List.of(user1));
+        when(userRepository.findAll())
+                .thenReturn(List.of(user1, user2));
+
+        List<UserResponseDTO> result = userService.searchUser(firstname, null, null, null, null);
+
+        assertEquals(1, result.size());
+        assertEquals(userResponseDTO1, result.get(0));
+
+        List<UserResponseDTO> result_all = userService.searchUser(null, null, null, null, null);
+
+        assertEquals(2, result_all.size());
+        assertEquals(userResponseDTO1, result_all.get(0));
+        assertEquals(userResponseDTO2, result_all.get(1));
+
+        verify(userRepository).searchUsers(firstname, null, null, null, null);
+    }
+    
+    @Test
+    void shouldSearchUserByUserId(){
+
+    }
 
     @Test
     void shouldCreateUser() {
@@ -68,4 +117,11 @@ public class UserServiceTest {
 
         verify(userRepository, times(1)).save(any(User.class));
     }
+
+    @Test
+    void shouldUpdateUser() {
+
+    }
+
+
 }
