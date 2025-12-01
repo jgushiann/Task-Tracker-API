@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -132,7 +132,47 @@ public class UserServiceTest {
 
     @Test
     void shouldUpdateUser() {
-        
+        Long userId = 1L;
+
+        User existingUser = new User();
+        existingUser.setUserId(userId);
+        existingUser.setUsername("oldUser");
+        existingUser.setPassword("oldPasswordHash");
+
+        UserRequestDTO requestDto = new UserRequestDTO();
+        requestDto.setUsername("newUser");
+        requestDto.setPassword("newPassword123");
+
+        User updatedUser = new User();
+        updatedUser.setUserId(userId);
+        updatedUser.setUsername("newUser");
+
+        UserResponseDTO responseDto = new UserResponseDTO();
+        responseDto.setUsername("newUser");
+
+        when(userRepository.findById(userId))
+                .thenReturn(Optional.of(existingUser));
+
+        when(userMapper.updateEntity(requestDto, existingUser))
+                .thenReturn(updatedUser);
+
+        when(userRepository.save(updatedUser))
+                .thenReturn(updatedUser);
+
+        when(userMapper.toDto(updatedUser))
+                .thenReturn(responseDto);
+
+        UserResponseDTO result = userService.updateUser(userId, requestDto);
+
+        assertNotNull(result);
+        assertEquals("newUser", result.getUsername());
+        assertNotEquals("newPassword123", updatedUser.getPassword());
+        assertTrue(updatedUser.getPassword().startsWith("$2"));
+
+        verify(userRepository).findById(userId);
+        verify(userMapper).updateEntity(requestDto, existingUser);
+        verify(userRepository).save(updatedUser);
+        verify(userMapper).toDto(updatedUser);
     }
 
 
