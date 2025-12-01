@@ -11,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -175,5 +177,31 @@ public class UserServiceTest {
         verify(userMapper).toDto(updatedUser);
     }
 
+    @Test
+    void shouldDeleteUser() {
+        Long userId = 1L;
 
+        when(userRepository.existsById(userId)).thenReturn(true);
+
+        userService.deleteUsers(userId);
+
+        verify(userRepository).existsById(userId);
+        verify(userRepository).deleteById(userId);
+    }
+
+    @Test
+    void shouldLoadUserByUsername() {
+        String username = "nini";
+
+        User user = new User();
+        user.setUsername(username);
+
+        when(userRepository.findByUsername(username))
+                .thenReturn(Optional.of(user));
+
+        UserDetails result = userService.loadUserByUsername(username);
+
+        assertEquals(username, result.getUsername());
+        verify(userRepository).findByUsername(username);
+    }
 }
