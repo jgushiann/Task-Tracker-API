@@ -7,6 +7,7 @@ C:\Users\nijg\OneDrive - Exxeta\Desktop\Task-Tracker-API\TaskTrackerAPI\TaskTrac
 C:\Users\nijg\OneDrive - Exxeta\Desktop\Task-Tracker-API\TaskTrackerAPI\TaskTrackerAPI\src\main\java\com\nini\TaskTrackerAPI\model\Priority.java
 C:\Users\nijg\OneDrive - Exxeta\Desktop\Task-Tracker-API\TaskTrackerAPI\TaskTrackerAPI\src\main\java\com\nini\TaskTrackerAPI\security\SecurityConfig.java
 C:\Users\nijg\OneDrive - Exxeta\Desktop\Task-Tracker-API\TaskTrackerAPI\TaskTrackerAPI\src\main\java\com\nini\TaskTrackerAPI\model\Category.java
+C:\Users\nijg\OneDrive - Exxeta\Desktop\Task-Tracker-API\TaskTrackerAPI\TaskTrackerAPI\src\main\java\com\nini\TaskTrackerAPI\model\Role.java
 C:\Users\nijg\OneDrive - Exxeta\Desktop\Task-Tracker-API\TaskTrackerAPI\TaskTrackerAPI\src\main\java\com\nini\TaskTrackerAPI\controller\TaskController.java
 C:\Users\nijg\OneDrive - Exxeta\Desktop\Task-Tracker-API\TaskTrackerAPI\TaskTrackerAPI\src\main\java\com\nini\TaskTrackerAPI\exception\GlobalExceptionHandler.java
 C:\Users\nijg\OneDrive - Exxeta\Desktop\Task-Tracker-API\TaskTrackerAPI\TaskTrackerAPI\src\main\java\com\nini\TaskTrackerAPI\service\UserService.java
@@ -20,6 +21,7 @@ C:\Users\nijg\OneDrive - Exxeta\Desktop\Task-Tracker-API\TaskTrackerAPI\TaskTrac
 C:\Users\nijg\OneDrive - Exxeta\Desktop\Task-Tracker-API\TaskTrackerAPI\TaskTrackerAPI\src\main\java\com\nini\TaskTrackerAPI\dto\UserResponseDTO.java
 C:\Users\nijg\OneDrive - Exxeta\Desktop\Task-Tracker-API\TaskTrackerAPI\TaskTrackerAPI\src\main\java\com\nini\TaskTrackerAPI\controller\UserController.java
 C:\Users\nijg\OneDrive - Exxeta\Desktop\Task-Tracker-API\TaskTrackerAPI\TaskTrackerAPI\src\main\java\com\nini\TaskTrackerAPI\dto\ErrorMessageDTO.java
+C:\Users\nijg\OneDrive - Exxeta\Desktop\Task-Tracker-API\TaskTrackerAPI\TaskTrackerAPI\src\main\java\com\nini\TaskTrackerAPI\exception\IncorrectCredentialsException.java
 C:\Users\nijg\OneDrive - Exxeta\Desktop\Task-Tracker-API\TaskTrackerAPI\TaskTrackerAPI\src\main\java\com\nini\TaskTrackerAPI\TaskTrackerApiApplication.java
 C:\Users\nijg\OneDrive - Exxeta\Desktop\Task-Tracker-API\TaskTrackerAPI\TaskTrackerAPI\src\main\java\com\nini\TaskTrackerAPI\dto\TaskRequestDTO.java
 C:\Users\nijg\OneDrive - Exxeta\Desktop\Task-Tracker-API\TaskTrackerAPI\TaskTrackerAPI\src\main\java\com\nini\TaskTrackerAPI\model\Status.java

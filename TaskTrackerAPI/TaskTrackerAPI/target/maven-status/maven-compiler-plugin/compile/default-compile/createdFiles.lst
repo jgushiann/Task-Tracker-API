@@ -14,6 +14,7 @@ com\nini\TaskTrackerAPI\exception\AlreadyExistsException.class
 com\nini\TaskTrackerAPI\model\Status.class
 com\nini\TaskTrackerAPI\security\SecurityConfig.class
 com\nini\TaskTrackerAPI\TaskTrackerApiApplication.class
+com\nini\TaskTrackerAPI\model\Role.class
 com\nini\TaskTrackerAPI\security\JwtFilter.class
 com\nini\TaskTrackerAPI\mapper\TaskMapperImpl.class
 com\nini\TaskTrackerAPI\dto\UserRequestDTO.class
@@ -22,6 +23,7 @@ com\nini\TaskTrackerAPI\service\TaskService.class
 com\nini\TaskTrackerAPI\mapper\UserMapperImpl.class
 com\nini\TaskTrackerAPI\mapper\TaskMapper.class
 com\nini\TaskTrackerAPI\service\UserService.class
+com\nini\TaskTrackerAPI\exception\IncorrectCredentialsException.class
 com\nini\TaskTrackerAPI\exception\GlobalExceptionHandler.class
 com\nini\TaskTrackerAPI\model\Task.class
 com\nini\TaskTrackerAPI\dto\TaskResponseDTO.class
