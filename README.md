@@ -47,6 +47,6 @@ The project uses a three-layer structure:
 2. Set up environment variables
 3. Build and run with Docker
 4. Testing Endpoints
-   You can test endpoints using Bruno, Postman, or any REST client.
+   - You can test endpoints using Bruno, Postman, or any REST client.
    
   
