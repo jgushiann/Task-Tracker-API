@@ -37,6 +37,7 @@ The project uses a three-layer structure:
 - Maven
 - Docker & Docker Compose for containerized deployment
 - Bruno for testing endpoints
+- REST
 
 ## Getting started:
 1. Clone the Repository
